@@ -7,7 +7,6 @@ const {
   Service,
   computed,
   get,
-  on,
   run
 } = Ember;
 
@@ -26,11 +25,13 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIds
 
   maxAutosaves: configurable(configurationTiers, 'maxAutosaves'),
 
-  setupEvents: on('init', function() {
+  init(...args) {
+    this._super(...args);
+
     const engineId = get(this, 'engineId');
 
     this.on(`ae:${engineId}:writingAutosave`, this, this.writeAutosave);
-  }),
+  },
 
   autosaves: computed({
     get() {

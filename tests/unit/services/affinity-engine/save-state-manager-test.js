@@ -9,7 +9,7 @@ const {
 moduleFor('service:affinity-engine/save-state-manager', 'Unit | Service | affinity engine/save state manager', {
   integration: true,
 
-  beforeEacher() {
+  beforeEach() {
     const appInstance = getOwner(this);
 
     initializeEngine(appInstance);
