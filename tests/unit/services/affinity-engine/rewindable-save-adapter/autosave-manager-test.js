@@ -8,7 +8,7 @@ const {
   run
 } = Ember;
 
-moduleFor('service:affinity-engine/autosave-manager', 'Unit | Service | affinity engine/autosave manager', {
+moduleFor('service:affinity-engine/rewindable-save-adapter/autosave-manager', 'Unit | Service | affinity engine/rewindable save adapter/autosave manager', {
   integration: true,
 
   beforeEach() {
