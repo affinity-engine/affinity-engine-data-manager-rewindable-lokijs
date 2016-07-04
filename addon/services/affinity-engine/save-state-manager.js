@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { MultitonIdsMixin, nativeCopy } from 'affinity-engine';
-import { BusSubscriberMixin } from 'ember-message-bus';
+import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 import multiton from 'ember-multiton-service';
 
 const {
@@ -18,7 +18,7 @@ const { reads } = computed;
 const { RSVP: { Promise } } = Ember;
 const { inject: { service } } = Ember;
 
-export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
+export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIdsMixin, {
   version: '0.0.0',
 
   store: service(),
@@ -104,9 +104,9 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
   },
 
   _loadRecord(record) {
-    record.reload();
+    record.rollbackAttributes();
 
-    this.trigger(`ae:${get(this, 'engineId')}:shouldLoadLatestStatePoint`, nativeCopy(get(record, 'statePoints')));
+    this.publish(`ae:${get(this, 'engineId')}:shouldLoadLatestStatePoint`, nativeCopy(get(record, 'statePoints')));
   },
 
   _getCurrentStatePoints() {

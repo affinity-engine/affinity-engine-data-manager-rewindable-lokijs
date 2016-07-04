@@ -14,7 +14,7 @@ const { inject: { service } } = Ember;
 export default Model.extend(LokiJSModelMixin, {
   isAutosave: attr('boolean'),
   name: attr('string'),
-  statePoints: attr('array'),
+  statePoints: attr(),
   engineId: attr('string'),
 
   i18n: service(),

@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
 import { initialize as initializeEngine } from 'affinity-engine';
+import { initializeQUnitAssertions } from 'ember-message-bus';
 
 const {
   getOwner,
@@ -18,6 +19,7 @@ moduleFor('service:affinity-engine/save-state-manager', 'Unit | Service | affini
     localStorage.clear();
 
     initializeEngine(appInstance);
+    initializeQUnitAssertions(appInstance);
   }
 });
 
@@ -150,7 +152,7 @@ test('shouldLoadSave reloads the record and then triggers shouldLoadLatestStateP
   const service = this.subject({ engineId });
   const store = service.get('store');
 
-  assert.willPublish(`ae:${engineId}:shouldLoadLatestStatePoint`, statePoints, 'shouldLoadLatestStatePoint with reloaded statePoints');
+  assert.willPublish(`ae:${engineId}:shouldLoadLatestStatePoint`, [statePoints], 'shouldLoadLatestStatePoint with reloaded statePoints');
 
   run(() => {
     store.createRecord('affinity-engine/local-save', { engineId, statePoints }).save().then((record) => {
