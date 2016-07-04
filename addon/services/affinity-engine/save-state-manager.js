@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import { MultitonIdsMixin, configurable, nativeCopy } from 'affinity-engine';
-import { BusSubscriberMixin } from 'ember-message-bus';
+import { MultitonIdsMixin, nativeCopy } from 'affinity-engine';
+import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 import multiton from 'ember-multiton-service';
 
 const {
@@ -10,46 +10,37 @@ const {
   getProperties,
   merge,
   run,
-  set,
   setProperties
 } = Ember;
+
+const { reads } = computed;
 
 const { RSVP: { Promise } } = Ember;
 const { inject: { service } } = Ember;
 
-const configurationTiers = [
-  'config.attrs.saveStateManager',
-  'config.attrs.globals'
-];
-
-export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
+export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIdsMixin, {
   version: '0.0.0',
 
   store: service(),
 
-  config: multiton('affinity-engine/config', 'engineId'),
+  activeStateManager: multiton('affinity-engine/rewindable-save-adapater/active-state-manager', 'engineId'),
+  statePointManager: multiton('affinity-engine/rewindable-save-adapater/state-point-manager', 'engineId'),
 
-  maxStatePoints: configurable(configurationTiers, 'maxStatePoints'),
+  activeState: reads('activeStateManager.activeState'),
+  statePoints: reads('statePointManager.statePoints'),
 
-  activeState: computed(() => Ember.Object.create()),
-  statePoints: computed(() => Ember.A()),
+  getStateValue(key) {
+    return get(this, `activeState.${key}`);
+  },
 
   init(...args) {
     this._super(...args);
 
     const engineId = get(this, 'engineId');
 
-    this.on(`et:${engineId}:saveIsCreating`, this, this.createRecord);
-    this.on(`et:${engineId}:saveIsUpdating`, this, this.updateRecord);
-    this.on(`et:${engineId}:saveIsDestroying`, this, this.deleteRecord);
-    this.on(`et:${engineId}:appendingActiveState`, this, this.appendActiveState);
-    this.on(`et:${engineId}:gameIsRewinding`, this, this.loadStatePoint);
-    this.on(`et:${engineId}:gameIsResetting`, this, this.resetActiveState);
-    this.on(`et:${engineId}:settingStateValue`, this, this.setStateValue);
-    this.on(`et:${engineId}:decrementingStateValue`, this, this.decrementStateValue);
-    this.on(`et:${engineId}:incrementingStateValue`, this, this.incrementStateValue);
-    this.on(`et:${engineId}:togglingStateValue`, this, this.toggleStateValue);
-    this.on(`et:${engineId}:deletingStateValue`, this, this.deleteStateValue);
+    this.on(`ae:${engineId}:saveIsCreating`, this, this.createRecord);
+    this.on(`ae:${engineId}:saveIsUpdating`, this, this.updateRecord);
+    this.on(`ae:${engineId}:saveIsDestroying`, this, this.deleteRecord);
   },
 
   mostRecentSave: computed({
@@ -74,27 +65,18 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
     }
   }).readOnly().volatile(),
 
-  // RECORD MANAGEMENT //
   createRecord(name, options) {
     const engineId = get(this, 'engineId');
     const version = get(this, 'version');
     const statePoints = this._getCurrentStatePoints();
 
-    const record = get(this, 'store').createRecord('affinity-engine/local-save', {
+    get(this, 'store').createRecord('affinity-engine/local-save', {
       name,
       statePoints,
       engineId,
       version,
       ...options
-    });
-
-    return new Promise((resolve) => {
-      record.save().then((save) => {
-        run(() => {
-          resolve(save);
-        });
-      });
-    });
+    }).save();
   },
 
   updateRecord(record, options) {
@@ -109,13 +91,7 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
       ...options
     });
 
-    return new Promise((resolve) => {
-      record.save().then((save) => {
-        run(() => {
-          resolve(save);
-        });
-      });
-    });
+    record.save();
   },
 
   _getCurrentStatePoints() {
@@ -128,13 +104,7 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
   },
 
   deleteRecord(record) {
-    return new Promise((resolve) => {
-      record.destroyRecord().then((save) => {
-        run(() => {
-          resolve(save);
-        });
-      });
-    });
+    record.destroyRecord();
   },
 
   loadRecord(record) {
@@ -149,57 +119,5 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
       activeState: nativeCopy(activeState),
       statePoints: Ember.A(nativeCopy(statePoints))
     });
-  },
-
-  // STATE MANAGEMENT //
-  resetActiveState() {
-    setProperties(this, {
-      activeState: {},
-      statePoints: Ember.A()
-    });
-  },
-
-  appendActiveState(optionalValues) {
-    const maxStatePoints = get(this, 'maxStatePoints');
-    const statePoints = get(this, 'statePoints');
-    const activeState = nativeCopy(get(this, 'activeState'));
-    const mergedState = merge(activeState, optionalValues);
-
-    statePoints.pushObject(mergedState);
-    set(this, 'activeState', activeState);
-
-    while (statePoints.length > maxStatePoints) {
-      statePoints.shiftObject();
-    }
-  },
-
-  loadStatePoint(statePoints) {
-    const activeState = get(statePoints, 'lastObject');
-
-    setProperties(this, { activeState, statePoints });
-  },
-
-  getStateValue(key) {
-    return get(this, `activeState.${key}`);
-  },
-
-  setStateValue(key, value) {
-    return set(this, `activeState.${key}`, value);
-  },
-
-  decrementStateValue(key, amount) {
-    return this.decrementProperty(`activeState.${key}`, amount);
-  },
-
-  incrementStateValue(key, amount) {
-    return this.incrementProperty(`activeState.${key}`, amount);
-  },
-
-  toggleStateValue(key) {
-    return this.toggleProperty(`activeState.${key}`);
-  },
-
-  deleteStateValue(key) {
-    return this.setStateValue(key, undefined);
   }
 });

@@ -57,7 +57,7 @@ test('`writeAutosave` creates a new autosave if maxAutosaves has not been reache
     store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save().then(() => {
       return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
     }).then(() => {
-      service.writeAutosave();
+      service.trigger(`ae:${engineId}:writingAutosave`);
     });
   });
 });
@@ -78,7 +78,7 @@ test('`writeAutosave` updates the oldest autosave if maxAutosaves has been reach
     }).then(() => {
       return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
     }).then(() => {
-      service.writeAutosave();
+      service.trigger(`ae:${engineId}:writingAutosave`);
     });
   });
 });
