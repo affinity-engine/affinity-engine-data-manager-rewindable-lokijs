@@ -24,6 +24,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIds
   store: service(),
 
   activeStateManager: multiton('affinity-engine/rewindable-save-adapater/active-state-manager', 'engineId'),
+  autosaveManager: multiton('affinity-engine/rewindable-save-adapater/autosave-manager', 'engineId'),
   statePointManager: multiton('affinity-engine/rewindable-save-adapater/state-point-manager', 'engineId'),
 
   activeState: reads('activeStateManager.activeState'),
@@ -35,6 +36,9 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIds
 
   init(...args) {
     this._super(...args);
+
+    // initialize managers
+    getProperties(this, 'activeStateManager', 'autosaveManager', 'statePointManager');
 
     const engineId = get(this, 'engineId');
 
@@ -117,7 +121,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIds
 
     setProperties(this, {
       activeState: nativeCopy(activeState),
-      statePoints: Ember.A(nativeCopy(statePoints))
+      statePoints: nativeCopy(statePoints)
     });
   }
 });

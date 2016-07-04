@@ -20,35 +20,35 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
 
   maxStatePoints: configurable(configurationTiers, 'maxStatePoints'),
 
-  statePoints: computed(() => Ember.A()),
+  statePoints: computed(() => []),
 
   init(...args) {
     this._super(...args);
 
     const engineId = get(this, 'engineId');
 
-    this.on(`ae:rsa:${engineId}:gameIsResetting`, this, this.reset);
+    this.on(`ae:rsa:${engineId}:gameIsResetting`, this, this._reset);
 
-    this.on(`ae:${engineId}:shouldFileActiveState`, this, this.shouldFileActiveState);
-    this.on(`ae:${engineId}:gameIsRewinding`, this, this.loadStatePoint);
+    this.on(`ae:${engineId}:gameIsRewinding`, this, this._loadStatePoints);
+    this.on(`ae:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
   },
 
-  reset() {
-    set(this, 'statePoints', Ember.A());
+  _reset() {
+    set(this, 'statePoints', []);
   },
 
-  shouldFileActiveState(activeState) {
+  _loadStatePoints(statePoints) {
+    set(this, 'statePoints', statePoints);
+  },
+
+  _shouldFileActiveState(activeState) {
     const maxStatePoints = get(this, 'maxStatePoints');
     const statePoints = get(this, 'statePoints');
 
-    statePoints.pushObject(activeState);
+    statePoints.push(activeState);
 
     while (statePoints.length > maxStatePoints) {
-      statePoints.shiftObject();
+      statePoints.shift();
     }
-  },
-
-  loadStatePoint(statePoints) {
-    set(this, 'statePoints', statePoints);
   }
 });
