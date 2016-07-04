@@ -43,34 +43,34 @@ test('`autosaves` returns a filtered list of saves that are autosaves with the c
   });
 });
 
-test('`writeAutosave` creates a new autosave if maxAutosaves has not been reached', function(assert) {
+test('`shouldWriteAutosave` creates a new autosave if maxAutosaves has not been reached', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, maxAutosaves: 3 });
   const store = service.get('store');
 
-  assert.willPublish(`ae:${engineId}:saveIsCreating`, ['', { isAutosave: true }], 'saveIsCreating was triggered');
-  assert.willNotPublish(`ae:${engineId}:saveIsUpdating`, 'saveIsUpdating should not be triggered');
+  assert.willPublish(`ae:${engineId}:shouldCreateSave`, ['', { isAutosave: true }], 'shouldCreateSave was triggered');
+  assert.willNotPublish(`ae:${engineId}:shouldUpdateSave`, 'shouldUpdateSave should not be triggered');
 
   run(() => {
     store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save().then(() => {
       return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
     }).then(() => {
-      service.trigger(`ae:${engineId}:writingAutosave`);
+      service.trigger(`ae:${engineId}:shouldWriteAutosave`);
     });
   });
 });
 
-test('`writeAutosave` updates the oldest autosave if maxAutosaves has been reached', function(assert) {
+test('`shouldWriteAutosave` updates the oldest autosave if maxAutosaves has been reached', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, maxAutosaves: 3 });
   const store = service.get('store');
 
-  assert.willNotPublish(`ae:${engineId}:saveIsCreating`, 'saveIsCreating was not triggered');
-  assert.willPublish(`ae:${engineId}:saveIsUpdating`, 'saveIsUpdating was triggered');
+  assert.willNotPublish(`ae:${engineId}:shouldCreateSave`, 'shouldCreateSave was not triggered');
+  assert.willPublish(`ae:${engineId}:shouldUpdateSave`, 'shouldUpdateSave was triggered');
 
   run(() => {
     store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save().then(() => {
@@ -78,7 +78,7 @@ test('`writeAutosave` updates the oldest autosave if maxAutosaves has been reach
     }).then(() => {
       return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
     }).then(() => {
-      service.trigger(`ae:${engineId}:writingAutosave`);
+      service.trigger(`ae:${engineId}:shouldWriteAutosave`);
     });
   });
 });

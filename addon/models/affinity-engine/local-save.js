@@ -21,9 +21,7 @@ export default Model.extend(LokiJSModelMixin, {
 
   activeState: computed('statePoints', {
     get() {
-      const data = get(this, 'statePoints.lastObject');
-
-      return Ember.Object.create(data);
+      return get(this, 'statePoints.lastObject');
     }
   }).readOnly(),
 

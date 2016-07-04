@@ -18,24 +18,24 @@ moduleFor('service:affinity-engine/rewindable-save-adapter/active-state-manager'
   }
 });
 
-test('gameIsResetting resets the activeState', function(assert) {
+test('shouldResetEngine resets the activeState', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, activeState: { foo: 'bar' } });
 
-  service.trigger(`ae:rsa:${engineId}:gameIsResetting`);
+  service.trigger(`ae:rsa:${engineId}:shouldResetEngine`);
 
   assert.deepEqual(service.get('activeState'), {}, 'activeState got reset');
 });
 
-test('gameIsRewinding loads the last argument', function(assert) {
+test('shouldLoadLatestStatePoint loads the last argument', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:gameIsRewinding`, Ember.A(['foo', 'bar', 'baz']));
+  service.trigger(`ae:${engineId}:shouldLoadLatestStatePoint`, Ember.A(['foo', 'bar', 'baz']));
 
   assert.equal(service.get('activeState'), 'baz', 'last item in array was loaded');
 });

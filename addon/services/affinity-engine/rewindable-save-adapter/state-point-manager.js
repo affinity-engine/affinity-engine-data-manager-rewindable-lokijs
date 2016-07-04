@@ -27,9 +27,9 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
 
     const engineId = get(this, 'engineId');
 
-    this.on(`ae:rsa:${engineId}:gameIsResetting`, this, this._reset);
+    this.on(`ae:rsa:${engineId}:shouldResetEngine`, this, this._reset);
 
-    this.on(`ae:${engineId}:gameIsRewinding`, this, this._loadStatePoints);
+    this.on(`ae:${engineId}:shouldLoadLatestStatePoint`, this, this._loadStatePoints);
     this.on(`ae:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
   },
 

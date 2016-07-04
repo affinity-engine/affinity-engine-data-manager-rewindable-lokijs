@@ -18,24 +18,24 @@ moduleFor('service:affinity-engine/rewindable-save-adapter/state-point-manager',
   }
 });
 
-test('gameIsResetting resets the statePoints', function(assert) {
+test('shouldResetEngine resets the statePoints', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, statePoints: ['foo'] });
 
-  service.trigger(`ae:rsa:${engineId}:gameIsResetting`);
+  service.trigger(`ae:rsa:${engineId}:shouldResetEngine`);
 
   assert.deepEqual(service.get('statePoints'), [], 'statePoints got reset');
 });
 
-test('gameIsRewinding sets the statePoints', function(assert) {
+test('shouldLoadLatestStatePoint sets the statePoints', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, statePoints: ['foo'] });
 
-  service.trigger(`ae:${engineId}:gameIsRewinding`, ['bar']);
+  service.trigger(`ae:${engineId}:shouldLoadLatestStatePoint`, ['bar']);
 
   assert.deepEqual(service.get('statePoints'), ['bar'], 'statePoints got set');
 });
