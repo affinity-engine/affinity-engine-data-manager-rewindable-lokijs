@@ -29,6 +29,18 @@ test('shouldResetEngine resets the activeState', function(assert) {
   assert.deepEqual(service.get('activeState'), {}, 'activeState got reset');
 });
 
+test('shouldFileActiveState publishes the activeState internally', function(assert) {
+  assert.expect(1);
+
+  const engineId = 'foo';
+  const activeState = { foo: 'bar' };
+  const service = this.subject({ engineId, activeState });
+
+  assert.willPublish(`ae:rsa:${engineId}:shouldFileActiveState`, [activeState], 'shouldFileActiveState with activeState');
+
+  service.trigger(`ae:${engineId}:shouldFileActiveState`);
+});
+
 test('shouldLoadLatestStatePoint loads the last argument', function(assert) {
   assert.expect(1);
 

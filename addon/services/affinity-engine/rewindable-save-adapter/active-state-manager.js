@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { MultitonIdsMixin } from 'affinity-engine';
-import { BusSubscriberMixin } from 'ember-message-bus';
+import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 
 const {
   Service,
@@ -10,7 +10,7 @@ const {
   setProperties
 } = Ember;
 
-export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
+export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIdsMixin, {
   activeState: computed(() => {
     return {};
   }),
@@ -22,6 +22,7 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
 
     this.on(`ae:rsa:${engineId}:shouldResetEngine`, this, this._reset);
 
+    this.on(`ae:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
     this.on(`ae:${engineId}:shouldLoadLatestStatePoint`, this, this._loadLatestStatePoint);
 
     this.on(`ae:${engineId}:shouldSetStateValue`, this, this._setStateValue);
@@ -34,6 +35,12 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
 
   _reset() {
     set(this, 'activeState', {});
+  },
+
+  _shouldFileActiveState() {
+    const engineId = get(this, 'engineId');
+
+    this.publish(`ae:rsa:${engineId}:shouldFileActiveState`, get(this, 'activeState'));
   },
 
   _loadLatestStatePoint(statePoints) {
