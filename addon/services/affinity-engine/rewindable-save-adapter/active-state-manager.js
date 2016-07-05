@@ -24,12 +24,12 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
 
     this.on(`ae:${engineId}:shouldLoadLatestStatePoint`, this, this._loadLatestStatePoint);
 
-    this.on(`ae:${engineId}:settingStateValue`, this, this._setStateValue);
-    this.on(`ae:${engineId}:settingStateValues`, this, this._setStateValues);
-    this.on(`ae:${engineId}:decrementingStateValue`, this, this._decrementStateValue);
-    this.on(`ae:${engineId}:incrementingStateValue`, this, this._incrementStateValue);
-    this.on(`ae:${engineId}:togglingStateValue`, this, this._toggleStateValue);
-    this.on(`ae:${engineId}:deletingStateValue`, this, this._deleteStateValue);
+    this.on(`ae:${engineId}:shouldSetStateValue`, this, this._setStateValue);
+    this.on(`ae:${engineId}:shouldSetStateValues`, this, this._setStateValues);
+    this.on(`ae:${engineId}:shouldDecrementStateValue`, this, this._decrementStateValue);
+    this.on(`ae:${engineId}:shouldIncrementStateValue`, this, this._incrementStateValue);
+    this.on(`ae:${engineId}:shouldToggleStateValue`, this, this._toggleStateValue);
+    this.on(`ae:${engineId}:shouldDeleteStateValue`, this, this._deleteStateValue);
   },
 
   _reset() {

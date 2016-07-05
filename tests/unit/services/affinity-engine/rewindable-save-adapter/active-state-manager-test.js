@@ -40,92 +40,92 @@ test('shouldLoadLatestStatePoint loads the last argument', function(assert) {
   assert.equal(service.get('activeState'), 'baz', 'last item in array was loaded');
 });
 
-test('settingStateValue sets a key value pair on activeState', function(assert) {
+test('shouldSetStateValue sets a key value pair on activeState', function(assert) {
   assert.expect(2);
 
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:settingStateValue`, 'foo', 'bar');
+  service.trigger(`ae:${engineId}:shouldSetStateValue`, 'foo', 'bar');
 
   assert.equal(service.get('activeState.foo'), 'bar', 'value was set');
 
-  service.trigger(`ae:${engineId}:settingStateValue`, 'foo', 'baz');
+  service.trigger(`ae:${engineId}:shouldSetStateValue`, 'foo', 'baz');
 
   assert.equal(service.get('activeState.foo'), 'baz', 'value was overwritten');
 });
 
-test('settingStateValues sets the provided properties on activeState', function(assert) {
+test('shouldSetStateValues sets the provided properties on activeState', function(assert) {
   assert.expect(2);
 
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:settingStateValues`, { foo: 1, bar: 1 });
+  service.trigger(`ae:${engineId}:shouldSetStateValues`, { foo: 1, bar: 1 });
 
   assert.deepEqual(service.get('activeState'), { foo: 1, bar: 1 }, 'value was set');
 
-  service.trigger(`ae:${engineId}:settingStateValues`, { foo: 2, baz: 2 });
+  service.trigger(`ae:${engineId}:shouldSetStateValues`, { foo: 2, baz: 2 });
 
   assert.deepEqual(service.get('activeState'), { foo: 2, bar: 1, baz: 2 }, 'value was added and changed');
 });
 
-test('decrementingStateValue decreases the stateValue', function(assert) {
+test('shouldDecrementStateValue decreases the stateValue', function(assert) {
   assert.expect(2);
 
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:decrementingStateValue`, 'foo');
+  service.trigger(`ae:${engineId}:shouldDecrementStateValue`, 'foo');
 
   assert.deepEqual(service.get('activeState.foo'), -1, 'initializes value if blank');
 
-  service.trigger(`ae:${engineId}:decrementingStateValue`, 'foo', 5);
+  service.trigger(`ae:${engineId}:shouldDecrementStateValue`, 'foo', 5);
 
   assert.deepEqual(service.get('activeState.foo'), -6, 'accepts additional values');
 });
 
-test('incrementingStateValue increases the stateValue', function(assert) {
+test('shouldIncrementStateValue increases the stateValue', function(assert) {
   assert.expect(2);
 
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:incrementingStateValue`, 'foo');
+  service.trigger(`ae:${engineId}:shouldIncrementStateValue`, 'foo');
 
   assert.deepEqual(service.get('activeState.foo'), 1, 'initializes value if blank');
 
-  service.trigger(`ae:${engineId}:incrementingStateValue`, 'foo', 5);
+  service.trigger(`ae:${engineId}:shouldIncrementStateValue`, 'foo', 5);
 
   assert.deepEqual(service.get('activeState.foo'), 6, 'accepts additional values');
 });
 
-test('togglingStateValue toggles the stateValue', function(assert) {
+test('shouldToggleStateValue toggles the stateValue', function(assert) {
   assert.expect(3);
 
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:togglingStateValue`, 'foo');
+  service.trigger(`ae:${engineId}:shouldToggleStateValue`, 'foo');
 
   assert.deepEqual(service.get('activeState.foo'), true, 'initializes value to true');
 
-  service.trigger(`ae:${engineId}:togglingStateValue`, 'foo');
+  service.trigger(`ae:${engineId}:shouldToggleStateValue`, 'foo');
 
   assert.deepEqual(service.get('activeState.foo'), false, 'toggles to false');
 
-  service.trigger(`ae:${engineId}:togglingStateValue`, 'foo');
+  service.trigger(`ae:${engineId}:shouldToggleStateValue`, 'foo');
 
   assert.deepEqual(service.get('activeState.foo'), true, 'toggles to true');
 });
 
-test('deletingStateValue deletes a stateValue', function(assert) {
+test('shouldDeleteStateValue deletes a stateValue', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, activeState: { foo: 'bar' } });
 
-  service.trigger(`ae:${engineId}:deletingStateValue`, 'foo');
+  service.trigger(`ae:${engineId}:shouldDeleteStateValue`, 'foo');
 
   assert.deepEqual(service.get('activeState.foo'), undefined, 'removed value');
 });
