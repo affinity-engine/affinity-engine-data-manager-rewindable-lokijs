@@ -30,7 +30,7 @@ export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
     this.on(`ae:rsa:${engineId}:shouldResetEngine`, this, this._reset);
 
     this.on(`ae:${engineId}:shouldLoadLatestStatePoint`, this, this._loadStatePoints);
-    this.on(`ae:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
+    this.on(`ae:rsa:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
   },
 
   _reset() {

@@ -46,7 +46,7 @@ test('shouldFileActiveState pushes the activeState to the statePoints', function
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:shouldFileActiveState`, 'foo');
+  service.trigger(`ae:rsa:${engineId}:shouldFileActiveState`, 'foo');
 
   assert.deepEqual(service.get('statePoints'), ['foo'], 'activeState got filed');
 });
@@ -57,7 +57,7 @@ test('shouldFileActiveState shifts old state points if they exceed maxStatePoint
   const engineId = 'foo';
   const service = this.subject({ engineId, maxStatePoints: 3, statePoints: [1, 2, 3] });
 
-  service.trigger(`ae:${engineId}:shouldFileActiveState`, 4);
+  service.trigger(`ae:rsa:${engineId}:shouldFileActiveState`, 4);
 
   assert.deepEqual(service.get('statePoints'), [2, 3, 4], 'activeState got filed and shifted');
 });
