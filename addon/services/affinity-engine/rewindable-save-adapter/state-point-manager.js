@@ -20,7 +20,7 @@ export default Service.extend(BusSubscriberMixin, {
 
   maxStatePoints: configurable(configurationTiers, 'maxStatePoints'),
 
-  statePoints: computed(() => []),
+  statePoints: computed(() => [{}]),
 
   init(...args) {
     this._super(...args);
@@ -34,7 +34,7 @@ export default Service.extend(BusSubscriberMixin, {
   },
 
   _reset() {
-    set(this, 'statePoints', []);
+    set(this, 'statePoints', [{}]);
   },
 
   _loadStatePoints(statePoints) {
