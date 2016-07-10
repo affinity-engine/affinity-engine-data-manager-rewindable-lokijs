@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { MultitonIdsMixin, nativeCopy } from 'affinity-engine';
+import { nativeCopy } from 'affinity-engine';
 import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 import multiton from 'ember-multiton-service';
 
@@ -18,7 +18,7 @@ const { reads } = computed;
 const { RSVP: { Promise } } = Ember;
 const { inject: { service } } = Ember;
 
-export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIdsMixin, {
+export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   version: '0.0.0',
 
   store: service(),

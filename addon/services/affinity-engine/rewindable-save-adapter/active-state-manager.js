@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import { MultitonIdsMixin } from 'affinity-engine';
 import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 
 const {
@@ -10,7 +9,7 @@ const {
   setProperties
 } = Ember;
 
-export default Service.extend(BusPublisherMixin, BusSubscriberMixin, MultitonIdsMixin, {
+export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   activeState: computed(() => {
     return {};
   }),

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { MultitonIdsMixin, configurable } from 'affinity-engine';
+import { configurable } from 'affinity-engine';
 import { BusSubscriberMixin } from 'ember-message-bus';
 import multiton from 'ember-multiton-service';
 
@@ -15,7 +15,7 @@ const configurationTiers = [
   'config.attrs.globals'
 ];
 
-export default Service.extend(BusSubscriberMixin, MultitonIdsMixin, {
+export default Service.extend(BusSubscriberMixin, {
   config: multiton('affinity-engine/config', 'engineId'),
 
   maxStatePoints: configurable(configurationTiers, 'maxStatePoints'),
