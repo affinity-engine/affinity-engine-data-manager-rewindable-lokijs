@@ -1,10 +1,10 @@
 export default {
   priority: 1,
-  saveStateManager: {
-    maxStatePoints: false
-  },
-  autosaveManager: {
-    maxAutosaves: 3
+  plugin: {
+    saveStateManager: {
+      maxAutosaves: 3,
+      maxStatePoints: false
+    }
   },
   'affinity-engine': {
     'save-state-manager': {

@@ -13,9 +13,8 @@ const {
 const { inject: { service } } = Ember;
 
 const configurationTiers = [
-  'config.attrs.autosaveManager',
-  'config.attrs.saveStateManager',
-  'config.attrs.globals'
+  'config.attrs.plugin.saveStateManager',
+  'config.attrs'
 ];
 
 export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {

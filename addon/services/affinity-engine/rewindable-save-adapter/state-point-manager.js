@@ -11,7 +11,7 @@ const {
 } = Ember;
 
 const configurationTiers = [
-  'config.attrs.saveStateManager',
+  'config.attrs.plugin.saveStateManager',
   'config.attrs.globals'
 ];
 
