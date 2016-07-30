@@ -6,7 +6,8 @@ import { LokiJSModelMixin } from 'ember-lokijs';
 
 const {
   computed,
-  get
+  get,
+  isPresent
 } = Ember;
 
 const { inject: { service } } = Ember;
@@ -19,7 +20,7 @@ export default Model.extend(LokiJSModelMixin, {
 
   i18n: service(),
 
-  activeState: computed('statePoints.[]', {
+  activeState: computed('statePoints.lastObject', {
     get() {
       const statePoints = get(this, 'statePoints');
 
@@ -40,7 +41,7 @@ export default Model.extend(LokiJSModelMixin, {
       if (get(this, 'isAutosave')) {
         const autoTranslation = get(this, 'i18n').t('affinity-engine.local-save.auto');
 
-        name = `${autoTranslation}: ${name}`;
+        name = isPresent(name) ? `${autoTranslation}: ${name}` : autoTranslation;
       }
 
       return `${name}, ${moment(get(this, 'updated')).format('MM/DD/YY h:mm:ss A')}`;

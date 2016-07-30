@@ -5,8 +5,26 @@ moduleForModel('affinity-engine/local-save', 'Unit | Model | affinity engine/loc
   needs: []
 });
 
-test('it exists', function(assert) {
-  let model = this.subject();
-  // let store = this.store();
-  assert.ok(!!model);
+test('activeState returns the last of statePoints', function(assert) {
+  assert.expect(1);
+
+  const model = this.subject({ statePoints: ['foo', 'bar', 'baz' ]});
+
+  assert.equal(model.get('activeState'), 'baz', 'is correct statePoint');
+});
+
+test('updated returns meta.updated if available', function(assert) {
+  assert.expect(1);
+
+  const model = this.subject({ meta: { updated: 'foo', created: 'bar' }});
+
+  assert.equal(model.get('updated'), 'foo', 'is correct meta');
+});
+
+test('updated returns meta.created if there is no meta.updated', function(assert) {
+  assert.expect(1);
+
+  const model = this.subject({ meta: { created: 'bar' }});
+
+  assert.equal(model.get('updated'), 'bar', 'is correct meta');
 });
