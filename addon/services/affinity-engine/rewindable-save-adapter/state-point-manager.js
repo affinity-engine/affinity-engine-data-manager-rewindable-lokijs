@@ -5,6 +5,7 @@ import multiton from 'ember-multiton-service';
 
 const {
   Service,
+  assign,
   computed,
   get,
   set
@@ -44,7 +45,7 @@ export default Service.extend(BusSubscriberMixin, {
     const maxStatePoints = get(this, 'maxStatePoints');
     const statePoints = get(this, 'statePoints');
 
-    statePoints.push(activeState);
+    statePoints.push(assign({}, activeState));
 
     while (statePoints.length > maxStatePoints) {
       statePoints.shift();
