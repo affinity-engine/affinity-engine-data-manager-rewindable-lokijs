@@ -19,7 +19,7 @@ export default Model.extend(LokiJSModelMixin, {
 
   i18n: service(),
 
-  activeState: computed('statePoints', {
+  activeState: computed('statePoints.lastObject', {
     get() {
       return get(this, 'statePoints.lastObject');
     }
