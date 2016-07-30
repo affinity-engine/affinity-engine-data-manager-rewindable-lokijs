@@ -18,13 +18,13 @@ moduleFor('service:affinity-engine/rewindable-save-adapter/active-state-manager'
   }
 });
 
-test('shouldResetEngine resets the activeState', function(assert) {
+test('restartingEngine resets the activeState', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, activeState: { foo: 'bar' } });
 
-  service.trigger(`ae:rsa:${engineId}:shouldResetEngine`);
+  service.trigger(`ae:${engineId}:restartingEngine`);
 
   assert.deepEqual(service.get('activeState'), {}, 'activeState got reset');
 });

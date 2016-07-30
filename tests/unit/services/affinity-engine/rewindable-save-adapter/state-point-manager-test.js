@@ -18,13 +18,13 @@ moduleFor('service:affinity-engine/rewindable-save-adapter/state-point-manager',
   }
 });
 
-test('shouldResetEngine resets the statePoints', function(assert) {
+test('restartingEngine resets the statePoints', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
   const service = this.subject({ engineId, statePoints: ['foo'] });
 
-  service.trigger(`ae:rsa:${engineId}:shouldResetEngine`);
+  service.trigger(`ae:${engineId}:restartingEngine`);
 
   assert.deepEqual(service.get('statePoints'), [{}], 'statePoints got reset');
 });

@@ -19,8 +19,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
 
     const engineId = get(this, 'engineId');
 
-    this.on(`ae:rsa:${engineId}:shouldResetEngine`, this, this._reset);
-
+    this.on(`ae:${engineId}:restartingEngine`, this, this._reset);
     this.on(`ae:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
     this.on(`ae:${engineId}:shouldLoadLatestStatePoint`, this, this._loadLatestStatePoint);
 
