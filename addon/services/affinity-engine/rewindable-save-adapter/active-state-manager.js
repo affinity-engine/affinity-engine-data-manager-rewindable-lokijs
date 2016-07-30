@@ -42,7 +42,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   },
 
   _loadLatestStatePoint(statePoints) {
-    const activeState = get(statePoints, 'lastObject');
+    const activeState = statePoints[statePoints.length - 1];
 
     set(this, 'activeState', activeState);
   },
