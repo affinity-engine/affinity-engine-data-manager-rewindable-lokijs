@@ -26,7 +26,7 @@ test('restartingEngine resets the statePoints', function(assert) {
 
   service.trigger(`ae:${engineId}:restartingEngine`);
 
-  assert.deepEqual(service.get('statePoints'), [{}], 'statePoints got reset');
+  assert.deepEqual(service.get('statePoints'), [], 'statePoints got reset');
 });
 
 test('shouldLoadLatestStatePoint sets the statePoints', function(assert) {
@@ -49,7 +49,7 @@ test('shouldFileActiveState pushes the activeState to the statePoints', function
 
   service.trigger(`ae:rsa:${engineId}:shouldFileActiveState`, state);
 
-  assert.deepEqual(service.get('statePoints'), [{}, { foo: 'bar' }], 'activeState got filed');
+  assert.deepEqual(service.get('statePoints'), [{ foo: 'bar' }], 'activeState got filed');
   assert.ok(state !== service.get('statePoints')[1], 'cloned');
 });
 

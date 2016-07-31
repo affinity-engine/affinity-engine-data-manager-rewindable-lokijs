@@ -3,6 +3,7 @@ import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 
 const {
   Service,
+  assign,
   computed,
   get,
   set,
@@ -42,7 +43,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   },
 
   _loadLatestStatePoint(statePoints) {
-    const activeState = statePoints[statePoints.length - 1];
+    const activeState = assign({}, statePoints[statePoints.length - 1]) || {};
 
     set(this, 'activeState', activeState);
   },

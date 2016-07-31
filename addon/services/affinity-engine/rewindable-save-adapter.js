@@ -9,6 +9,7 @@ const {
   computed,
   get,
   getProperties,
+  isEmpty,
   run,
   setProperties
 } = Ember;
@@ -112,6 +113,8 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   _getCurrentStatePoints() {
     const statePoints = nativeCopy(get(this, 'statePoints'));
     const activeState = nativeCopy(get(this, 'activeState'));
+
+    if (isEmpty(statePoints)) { statePoints.push({}); }
 
     assign(statePoints[statePoints.length - 1], activeState);
 
