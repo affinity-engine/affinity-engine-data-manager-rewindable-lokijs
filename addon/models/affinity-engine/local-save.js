@@ -1,6 +1,7 @@
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import Ember from 'ember';
+import { registrant } from 'affinity-engine';
 import moment from 'moment';
 import { LokiJSModelMixin } from 'ember-lokijs';
 
@@ -10,15 +11,13 @@ const {
   isPresent
 } = Ember;
 
-const { inject: { service } } = Ember;
-
 export default Model.extend(LokiJSModelMixin, {
   isAutosave: attr('boolean'),
   name: attr('string'),
   statePoints: attr(),
   engineId: attr('string'),
 
-  i18n: service(),
+  translator: registrant('affinity-engine/translator'),
 
   activeState: computed('statePoints.lastObject', {
     get() {
@@ -39,7 +38,7 @@ export default Model.extend(LokiJSModelMixin, {
       let name = get(this, 'name') || get(this, 'activeState.sceneName');
 
       if (get(this, 'isAutosave')) {
-        const autoTranslation = get(this, 'i18n').t('affinity-engine.local-save.auto');
+        const autoTranslation = get(this, 'translator').translate('affinity-engine.plugins.save-state-manager.autosave');
 
         name = isPresent(name) ? `${autoTranslation}: ${name}` : autoTranslation;
       }

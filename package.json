@@ -19,6 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "affinity-engine": "git+https://github.com/affinity-engine/affinity-engine.git",
+    "affinity-engine-translator-ember-intl": "git+https://github.com/affinity-engine/affinity-engine-translator-ember-intl.git",
     "babel-eslint": "^6.0.4",
     "broccoli-asset-rev": "^2.4.2",
     "ember-ajax": "^2.0.1",
