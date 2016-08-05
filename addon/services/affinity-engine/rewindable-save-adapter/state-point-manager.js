@@ -12,8 +12,8 @@ const {
 } = Ember;
 
 const configurationTiers = [
-  'config.attrs.plugin.saveStateManager',
-  'config.attrs.globals'
+  'config.attrs.plugins.saveStateManager',
+  'config.attrs'
 ];
 
 export default Service.extend(BusSubscriberMixin, {

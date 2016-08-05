@@ -2,7 +2,7 @@ import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('affinity-engine/local-save', 'Unit | Model | affinity engine/local save', {
   // Specify the other units that are required for this test.
-  needs: []
+  needs: ['service:multiton-service-manager']
 });
 
 test('activeState returns the last of statePoints', function(assert) {

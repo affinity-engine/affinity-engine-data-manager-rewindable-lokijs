@@ -1,9 +1,9 @@
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import Ember from 'ember';
-import { registrant } from 'affinity-engine';
-import moment from 'moment';
+import { configurable, registrant } from 'affinity-engine';
 import { LokiJSModelMixin } from 'ember-lokijs';
+import multiton from 'ember-multiton-service';
 
 const {
   computed,
@@ -11,13 +11,21 @@ const {
   isPresent
 } = Ember;
 
+const configurationTiers = [
+  'config.attrs.plugins.saveStateManager',
+  'config.attrs'
+];
+
 export default Model.extend(LokiJSModelMixin, {
   isAutosave: attr('boolean'),
   name: attr('string'),
   statePoints: attr(),
   engineId: attr('string'),
 
+  config: multiton('affinity-engine/config', 'engineId'),
   translator: registrant('affinity-engine/translator'),
+
+  dateFormat: configurable(configurationTiers, 'dateFormat'),
 
   activeState: computed('statePoints.lastObject', {
     get() {
@@ -33,7 +41,7 @@ export default Model.extend(LokiJSModelMixin, {
     }
   }).readOnly(),
 
-  fullName: computed('name', 'activeState.sceneName', 'updated', {
+  fullName: computed('name', 'activeState.sceneName', {
     get() {
       let name = get(this, 'name') || get(this, 'activeState.sceneName');
 
@@ -43,7 +51,13 @@ export default Model.extend(LokiJSModelMixin, {
         name = isPresent(name) ? `${autoTranslation}: ${name}` : autoTranslation;
       }
 
-      return `${name}, ${moment(get(this, 'updated')).format('MM/DD/YY h:mm:ss A')}`;
+      return name;
+    }
+  }),
+
+  formattedDate: computed('updated', {
+    get() {
+      return get(this, 'translator').formatDate(get(this, 'updated'), get(this, 'dateFormat'));
     }
   })
 });
