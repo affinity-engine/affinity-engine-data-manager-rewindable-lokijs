@@ -59,5 +59,11 @@ export default Model.extend(LokiJSModelMixin, {
     get() {
       return get(this, 'translator').formatDate(get(this, 'updated'), get(this, 'dateFormat'));
     }
+  }),
+
+  fullNameAndDate: computed('fullName', 'formattedDate', {
+    get() {
+      return `${get(this, 'fullName')}: ${get(this, 'formattedDate')}`;
+    }
   })
 });
