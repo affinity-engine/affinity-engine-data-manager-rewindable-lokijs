@@ -7,6 +7,7 @@ const {
   Service,
   computed,
   get,
+  getProperties,
   run
 } = Ember;
 
@@ -46,11 +47,11 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   writeAutosave() {
     get(this, 'autosaves').then((autosaves) => {
       run(() => {
-        const engineId = get(this, 'engineId');
+        const { engineId, maxAutosaves } = getProperties(this, 'engineId', 'maxAutosaves');
 
-        if (get(this, 'maxAutosaves') > get(autosaves, 'length')) {
+        if (maxAutosaves > get(autosaves, 'length')) {
           this.publish(`ae:${engineId}:shouldCreateSave`, '', { isAutosave: true });
-        } else {
+        } else if (maxAutosaves > 0) {
           const autosave = autosaves.sortBy('updated').get('firstObject');
 
           this.publish(`ae:${engineId}:shouldUpdateSave`, autosave);
