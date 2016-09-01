@@ -35,7 +35,7 @@ test('shouldLoadLatestStatePoint sets the statePoints', function(assert) {
   const engineId = 'foo';
   const service = this.subject({ engineId, statePoints: ['foo'] });
 
-  service.trigger(`ae:${engineId}:shouldLoadLatestStatePoint`, ['bar']);
+  service.trigger(`ae:${engineId}:main:shouldLoadLatestStatePoint`, ['bar']);
 
   assert.deepEqual(service.get('statePoints'), ['bar'], 'statePoints got set');
 });

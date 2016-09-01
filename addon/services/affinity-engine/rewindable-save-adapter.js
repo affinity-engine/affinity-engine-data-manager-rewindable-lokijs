@@ -107,7 +107,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   _loadRecord(record) {
     record.rollbackAttributes();
 
-    this.publish(`ae:${get(this, 'engineId')}:shouldLoadLatestStatePoint`, nativeCopy(get(record, 'statePoints')));
+    this.publish(`ae:${get(this, 'engineId')}:main:shouldLoadLatestStatePoint`, nativeCopy(get(record, 'statePoints')));
   },
 
   _getCurrentStatePoints() {

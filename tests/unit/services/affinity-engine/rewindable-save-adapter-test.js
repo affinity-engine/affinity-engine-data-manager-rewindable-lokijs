@@ -178,7 +178,7 @@ test('shouldLoadSave reloads the record and then triggers shouldLoadLatestStateP
   const service = this.subject({ engineId });
   const store = service.get('store');
 
-  assert.willPublish(`ae:${engineId}:shouldLoadLatestStatePoint`, [statePoints], 'shouldLoadLatestStatePoint with reloaded statePoints');
+  assert.willPublish(`ae:${engineId}:main:shouldLoadLatestStatePoint`, [statePoints], 'shouldLoadLatestStatePoint with reloaded statePoints');
 
   run(() => {
     store.createRecord('affinity-engine/local-save', { engineId, statePoints }).save().then((record) => {

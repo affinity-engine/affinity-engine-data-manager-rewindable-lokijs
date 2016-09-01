@@ -22,7 +22,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
 
     this.on(`ae:${engineId}:restartingEngine`, this, this._reset);
     this.on(`ae:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
-    this.on(`ae:${engineId}:shouldLoadLatestStatePoint`, this, this._loadLatestStatePoint);
+    this.on(`ae:${engineId}:main:shouldLoadLatestStatePoint`, this, this._loadLatestStatePoint);
 
     this.on(`ae:${engineId}:shouldSetStateValue`, this, this._setStateValue);
     this.on(`ae:${engineId}:shouldSetStateValues`, this, this._setStateValues);

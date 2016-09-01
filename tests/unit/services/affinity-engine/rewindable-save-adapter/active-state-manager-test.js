@@ -47,7 +47,7 @@ test('shouldLoadLatestStatePoint loads the last argument', function(assert) {
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  service.trigger(`ae:${engineId}:shouldLoadLatestStatePoint`, [{ foo: 'bar' }, { foo: 'baz' }]);
+  service.trigger(`ae:${engineId}:main:shouldLoadLatestStatePoint`, [{ foo: 'bar' }, { foo: 'baz' }]);
 
   assert.deepEqual(service.get('activeState'), { foo: 'baz' }, 'last item in array was loaded');
 });
