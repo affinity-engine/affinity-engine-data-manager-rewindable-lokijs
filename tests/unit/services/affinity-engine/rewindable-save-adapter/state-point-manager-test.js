@@ -24,7 +24,7 @@ test('restartingEngine resets the statePoints', function(assert) {
   const engineId = 'foo';
   const service = this.subject({ engineId, statePoints: ['foo'] });
 
-  service.trigger(`ae:${engineId}:restartingEngine`);
+  service.trigger(`ae:${engineId}:main:restartingEngine`);
 
   assert.deepEqual(service.get('statePoints'), [], 'statePoints got reset');
 });

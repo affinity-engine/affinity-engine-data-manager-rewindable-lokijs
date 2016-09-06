@@ -116,7 +116,9 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
 
     if (isEmpty(statePoints)) { statePoints.push({}); }
 
-    assign(statePoints[statePoints.length - 1], activeState);
+    const lastIndex = statePoints.length - 1;
+
+    statePoints[lastIndex] = assign({}, statePoints[lastIndex], activeState);
 
     return statePoints;
   }

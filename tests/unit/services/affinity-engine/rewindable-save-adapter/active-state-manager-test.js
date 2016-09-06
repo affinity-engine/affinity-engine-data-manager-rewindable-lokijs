@@ -24,7 +24,7 @@ test('restartingEngine resets the activeState', function(assert) {
   const engineId = 'foo';
   const service = this.subject({ engineId, activeState: { foo: 'bar' } });
 
-  service.trigger(`ae:${engineId}:restartingEngine`);
+  service.trigger(`ae:${engineId}:main:restartingEngine`);
 
   assert.deepEqual(service.get('activeState'), {}, 'activeState got reset');
 });
