@@ -1,5 +1,5 @@
 {
-  "name": "affinity-engine-rewindable-save-adapter",
+  "name": "affinity-engine-data-manager-rewindable-lokijs",
   "version": "0.0.0",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember try:each"
   },
-  "repository": "https://github.com/affinity-engine/affinity-engine-rewindable-save-adapter",
+  "repository": "https://github.com/affinity-engine/affinity-engine-data-manager-rewindable-lokijs",
   "engines": {
     "node": ">= 0.10.0"
   },

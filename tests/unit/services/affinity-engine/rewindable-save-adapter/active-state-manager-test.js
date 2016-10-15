@@ -7,7 +7,7 @@ const {
   getOwner
 } = Ember;
 
-moduleFor('service:affinity-engine/rewindable-save-adapter/active-state-manager', 'Unit | Service | affinity engine/rewindable save adapter/active state manager', {
+moduleFor('service:affinity-engine/data-manager-rewindable-lokijs/active-state-manager', 'Unit | Service | affinity engine/rewindable save adapter/active state manager', {
   integration: true,
 
   beforeEach() {

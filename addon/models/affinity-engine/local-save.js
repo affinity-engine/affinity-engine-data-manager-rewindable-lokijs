@@ -46,7 +46,7 @@ export default Model.extend(LokiJSModelMixin, {
       let name = get(this, 'name') || get(this, 'activeState.sceneName');
 
       if (get(this, 'isAutosave')) {
-        const autoTranslation = get(this, 'translator').translate('affinity-engine.plugins.save-state-manager.autosave');
+        const autoTranslation = get(this, 'translator').translate('affinity-engine.plugins.data-manager.autosave');
 
         name = isPresent(name) ? `<em>${autoTranslation}</em> ${name}` : autoTranslation;
       }

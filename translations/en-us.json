@@ -1,7 +1,7 @@
 {
   "affinity-engine": {
     "plugins": {
-      "save-state-manager": {
+      "data-manager": {
         "autosave": "autosave"
       }
     }

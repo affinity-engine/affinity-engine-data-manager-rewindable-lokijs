@@ -10,7 +10,7 @@ const {
 
 const { next } = run;
 
-moduleFor('service:affinity-engine/rewindable-save-adapter', 'Unit | Service | affinity engine/rewindable save state manager', {
+moduleFor('service:affinity-engine/data-manager-rewindable-lokijs', 'Unit | Service | affinity engine/rewindable save state manager', {
   integration: true,
 
   beforeEach() {

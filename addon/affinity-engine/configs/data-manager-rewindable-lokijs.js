@@ -7,8 +7,8 @@ export default {
     }
   },
   'affinity-engine': {
-    'save-state-manager': {
-      path: 'service:affinity-engine/rewindable-save-adapter'
+    'data-manager': {
+      path: 'service:affinity-engine/data-manager-rewindable-lokijs'
     }
   }
 };

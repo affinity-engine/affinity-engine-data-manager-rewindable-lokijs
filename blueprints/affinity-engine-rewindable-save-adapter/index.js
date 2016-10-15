@@ -1,6 +1,6 @@
 /*jshint node:true*/
 module.exports = {
-  description: 'blueprint for affinity-engine-rewindable-save-adapter',
+  description: 'blueprint for affinity-engine-data-manager-rewindable-lokijs',
 
   normalizeEntityName: function() {},
 

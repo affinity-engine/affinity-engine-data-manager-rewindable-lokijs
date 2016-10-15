@@ -1,1 +1,1 @@
-export { default } from 'affinity-engine-rewindable-save-adapter/services/affinity-engine/rewindable-save-adapter/active-state-manager';
+export { default } from 'affinity-engine-data-manager-rewindable-lokijs/services/affinity-engine/data-manager-rewindable-lokijs/active-state-manager';

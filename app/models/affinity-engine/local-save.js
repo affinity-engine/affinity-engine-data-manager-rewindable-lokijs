@@ -1,1 +1,1 @@
-export { default } from 'affinity-engine-rewindable-save-adapter/models/affinity-engine/local-save';
+export { default } from 'affinity-engine-data-manager-rewindable-lokijs/models/affinity-engine/local-save';

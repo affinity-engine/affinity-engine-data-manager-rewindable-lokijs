@@ -24,9 +24,9 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
 
   store: service(),
 
-  activeStateManager: multiton('affinity-engine/rewindable-save-adapter/active-state-manager', 'engineId'),
-  autosaveManager: multiton('affinity-engine/rewindable-save-adapter/autosave-manager', 'engineId'),
-  statePointManager: multiton('affinity-engine/rewindable-save-adapter/state-point-manager', 'engineId'),
+  activeStateManager: multiton('affinity-engine/data-manager-rewindable-lokijs/active-state-manager', 'engineId'),
+  autosaveManager: multiton('affinity-engine/data-manager-rewindable-lokijs/autosave-manager', 'engineId'),
+  statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   activeState: reads('activeStateManager.activeState'),
   statePoints: reads('statePointManager.statePoints'),
