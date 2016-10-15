@@ -1,7 +1,7 @@
 export default {
   priority: 1,
   plugin: {
-    saveStateManager: {
+    dataManager: {
       maxAutosaves: 3,
       maxStatePoints: false
     }

@@ -85,7 +85,7 @@ test('`shouldWriteAutosave` updates the oldest autosave if maxAutosaves has been
 
 const configurationTiers = [
   'config.attrs.autosaveManager',
-  'config.attrs.saveStateManager',
+  'config.attrs.dataManager',
   'config.attrs.globals'
 ];
 

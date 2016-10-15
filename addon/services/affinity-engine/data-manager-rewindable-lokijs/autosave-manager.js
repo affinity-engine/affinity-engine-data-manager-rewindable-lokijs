@@ -14,7 +14,7 @@ const {
 const { inject: { service } } = Ember;
 
 const configurationTiers = [
-  'config.attrs.plugin.saveStateManager',
+  'config.attrs.plugin.dataManager',
   'config.attrs'
 ];
 
