@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import { nativeCopy } from 'affinity-engine';
-import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 import multiton from 'ember-multiton-service';
 
 const {
@@ -19,13 +18,14 @@ const { reads } = computed;
 const { RSVP: { Promise } } = Ember;
 const { inject: { service } } = Ember;
 
-export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
+export default Service.extend({
   version: '0.0.0',
 
   store: service(),
 
   activeStateManager: multiton('affinity-engine/data-manager-rewindable-lokijs/active-state-manager', 'engineId'),
   autosaveManager: multiton('affinity-engine/data-manager-rewindable-lokijs/autosave-manager', 'engineId'),
+  eBus: multiton('message-bus', 'engineId'),
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   activeState: reads('activeStateManager.activeState'),
@@ -41,12 +41,12 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
     // initialize managers
     getProperties(this, 'activeStateManager', 'autosaveManager', 'statePointManager');
 
-    const engineId = get(this, 'engineId');
+    const eBus = get(this, 'eBus');
 
-    this.on(`ae:${engineId}:shouldCreateSave`, this, this._createRecord);
-    this.on(`ae:${engineId}:shouldUpdateSave`, this, this._updateRecord);
-    this.on(`ae:${engineId}:shouldDeleteSave`, this, this._deleteRecord);
-    this.on(`ae:${engineId}:shouldLoadSave`, this, this._loadRecord);
+    eBus.subscribe('shouldCreateSave', this, this._createRecord);
+    eBus.subscribe('shouldUpdateSave', this, this._updateRecord);
+    eBus.subscribe('shouldDeleteSave', this, this._deleteRecord);
+    eBus.subscribe('shouldLoadSave', this, this._loadRecord);
   },
 
   mostRecentSave: computed({
@@ -107,7 +107,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   _loadRecord(record) {
     record.rollbackAttributes();
 
-    this.publish(`ae:${get(this, 'engineId')}:main:shouldLoadLatestStatePoint`, nativeCopy(get(record, 'statePoints')));
+    get(this, 'eBus').publish('shouldLoadLatestStatePoint', nativeCopy(get(record, 'statePoints')));
   },
 
   _getCurrentStatePoints() {

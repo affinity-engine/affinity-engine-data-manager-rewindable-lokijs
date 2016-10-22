@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
 import { initialize as initializeEngine } from 'affinity-engine';
 import { initializeQUnitAssertions } from 'ember-message-bus';
+import multiton from 'ember-multiton-service';
 
 const {
   getOwner,
@@ -9,6 +10,9 @@ const {
 } = Ember;
 
 const { next } = run;
+
+const Publisher = Ember.Object.extend({ eBus: multiton('message-bus', 'engineId'), engineId: 'foo' });
+let publisher;
 
 moduleFor('service:affinity-engine/data-manager-rewindable-lokijs', 'Unit | Service | affinity engine/rewindable save state manager', {
   integration: true,
@@ -19,7 +23,9 @@ moduleFor('service:affinity-engine/data-manager-rewindable-lokijs', 'Unit | Serv
     localStorage.clear();
 
     initializeEngine(appInstance);
-    initializeQUnitAssertions(appInstance);
+    initializeQUnitAssertions(appInstance, 'eBus', Ember.Object.extend({ eBus: multiton('message-bus', 'engineId'), engineId: 'foo' }));
+    appInstance.register('ember-message-bus:publisher', Publisher);
+    publisher = appInstance.lookup('ember-message-bus:publisher');
   }
 });
 
@@ -81,7 +87,7 @@ test('shouldCreateSave creates a save', function(assert) {
   const store = service.get('store');
 
   run(() => {
-    service.trigger(`ae:${engineId}:shouldCreateSave`, name, options);
+    publisher.get('eBus').publish('shouldCreateSave', name, options);
   });
 
   next(() => {
@@ -107,7 +113,7 @@ test('shouldCreateSave creates a save, even when there are no statePoints', func
   const store = service.get('store');
 
   run(() => {
-    service.trigger(`ae:${engineId}:shouldCreateSave`, name, options);
+    publisher.get('eBus').publish('shouldCreateSave', name, options);
   });
 
   next(() => {
@@ -135,7 +141,7 @@ test('shouldUpdateSave updates a save', function(assert) {
 
   run(() => {
     store.createRecord('affinity-engine/local-save', { name, engineId: 'bar', statePoints: [{ blah: 'blah' }]}).save().then((record) => {
-      service.trigger(`ae:${engineId}:shouldUpdateSave`, record, options);
+      publisher.get('eBus').publish('shouldUpdateSave', record, options);
     });
   });
 
@@ -159,7 +165,7 @@ test('shouldDeleteSave deletes a save', function(assert) {
 
   run(() => {
     store.createRecord('affinity-engine/local-save', { engineId }).save().then((record) => {
-      service.trigger(`ae:${engineId}:shouldDeleteSave`, record);
+      publisher.get('eBus').publish('shouldDeleteSave', record);
     });
   });
 
@@ -178,13 +184,13 @@ test('shouldLoadSave reloads the record and then triggers shouldLoadLatestStateP
   const service = this.subject({ engineId });
   const store = service.get('store');
 
-  assert.willPublish(`ae:${engineId}:main:shouldLoadLatestStatePoint`, [statePoints], 'shouldLoadLatestStatePoint with reloaded statePoints');
+  assert.willPublish('shouldLoadLatestStatePoint', [statePoints], 'shouldLoadLatestStatePoint with reloaded statePoints');
 
   run(() => {
     store.createRecord('affinity-engine/local-save', { engineId, statePoints }).save().then((record) => {
       record.set('statePoints', ['oooops']);
 
-      service.trigger(`ae:${engineId}:shouldLoadSave`, record);
+      publisher.get('eBus').publish('shouldLoadSave', record);
     });
   });
 });

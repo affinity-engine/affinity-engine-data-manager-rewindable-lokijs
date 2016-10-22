@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
+import multiton from 'ember-multiton-service';
 
 const {
   Service,
@@ -10,26 +10,28 @@ const {
   setProperties
 } = Ember;
 
-export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
+export default Service.extend({
   activeState: computed(() => {
     return {};
   }),
 
+  eBus: multiton('message-bus', 'engineId'),
+
   init(...args) {
     this._super(...args);
 
-    const engineId = get(this, 'engineId');
+    const eBus = get(this, 'eBus');
 
-    this.on(`ae:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
-    this.on(`ae:${engineId}:main:restartingEngine`, this, this._reset);
-    this.on(`ae:${engineId}:main:shouldLoadLatestStatePoint`, this, this._loadLatestStatePoint);
+    eBus.subscribe('shouldFileActiveState', this, this._shouldFileActiveState);
+    eBus.subscribe('restartingEngine', this, this._reset);
+    eBus.subscribe('shouldLoadLatestStatePoint', this, this._loadLatestStatePoint);
 
-    this.on(`ae:${engineId}:shouldSetStateValue`, this, this._setStateValue);
-    this.on(`ae:${engineId}:shouldSetStateValues`, this, this._setStateValues);
-    this.on(`ae:${engineId}:shouldDecrementStateValue`, this, this._decrementStateValue);
-    this.on(`ae:${engineId}:shouldIncrementStateValue`, this, this._incrementStateValue);
-    this.on(`ae:${engineId}:shouldToggleStateValue`, this, this._toggleStateValue);
-    this.on(`ae:${engineId}:shouldDeleteStateValue`, this, this._deleteStateValue);
+    eBus.subscribe('shouldSetStateValue', this, this._setStateValue);
+    eBus.subscribe('shouldSetStateValues', this, this._setStateValues);
+    eBus.subscribe('shouldDecrementStateValue', this, this._decrementStateValue);
+    eBus.subscribe('shouldIncrementStateValue', this, this._incrementStateValue);
+    eBus.subscribe('shouldToggleStateValue', this, this._toggleStateValue);
+    eBus.subscribe('shouldDeleteStateValue', this, this._deleteStateValue);
   },
 
   _reset() {
@@ -37,9 +39,7 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   },
 
   _shouldFileActiveState() {
-    const engineId = get(this, 'engineId');
-
-    this.publish(`ae:rsa:${engineId}:shouldFileActiveState`, get(this, 'activeState'));
+    get(this, 'eBus').publish('rsa:shouldFileActiveState', get(this, 'activeState'));
   },
 
   _loadLatestStatePoint(statePoints) {

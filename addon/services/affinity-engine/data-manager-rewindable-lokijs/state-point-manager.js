@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import { configurable } from 'affinity-engine';
-import { BusSubscriberMixin } from 'ember-message-bus';
 import multiton from 'ember-multiton-service';
 
 const {
@@ -16,8 +15,9 @@ const configurationTiers = [
   'config.attrs'
 ];
 
-export default Service.extend(BusSubscriberMixin, {
+export default Service.extend({
   config: multiton('affinity-engine/config', 'engineId'),
+  eBus: multiton('message-bus', 'engineId'),
 
   maxStatePoints: configurable(configurationTiers, 'maxStatePoints'),
 
@@ -26,11 +26,11 @@ export default Service.extend(BusSubscriberMixin, {
   init(...args) {
     this._super(...args);
 
-    const engineId = get(this, 'engineId');
+    const eBus = get(this, 'eBus');
 
-    this.on(`ae:${engineId}:main:restartingEngine`, this, this._reset);
-    this.on(`ae:${engineId}:main:shouldLoadLatestStatePoint`, this, this._loadStatePoints);
-    this.on(`ae:rsa:${engineId}:shouldFileActiveState`, this, this._shouldFileActiveState);
+    eBus.subscribe('restartingEngine', this, this._reset);
+    eBus.subscribe('shouldLoadLatestStatePoint', this, this._loadStatePoints);
+    eBus.subscribe('rsa:shouldFileActiveState', this, this._shouldFileActiveState);
   },
 
   _reset() {

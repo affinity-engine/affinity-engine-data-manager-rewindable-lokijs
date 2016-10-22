@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import { configurable } from 'affinity-engine';
-import { BusPublisherMixin, BusSubscriberMixin } from 'ember-message-bus';
 import multiton from 'ember-multiton-service';
 
 const {
@@ -18,19 +17,18 @@ const configurationTiers = [
   'config.attrs'
 ];
 
-export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
+export default Service.extend({
   store: service(),
 
   config: multiton('affinity-engine/config', 'engineId'),
+  eBus: multiton('message-bus', 'engineId'),
 
   maxAutosaves: configurable(configurationTiers, 'maxAutosaves'),
 
   init(...args) {
     this._super(...args);
 
-    const engineId = get(this, 'engineId');
-
-    this.on(`ae:${engineId}:shouldWriteAutosave`, this, this.writeAutosave);
+    get(this, 'eBus').subscribe('shouldWriteAutosave', this, this.writeAutosave);
   },
 
   autosaves: computed({
@@ -47,14 +45,14 @@ export default Service.extend(BusPublisherMixin, BusSubscriberMixin, {
   writeAutosave() {
     get(this, 'autosaves').then((autosaves) => {
       run(() => {
-        const { engineId, maxAutosaves } = getProperties(this, 'engineId', 'maxAutosaves');
+        const { eBus, maxAutosaves } = getProperties(this, 'eBus', 'maxAutosaves');
 
         if (maxAutosaves > get(autosaves, 'length')) {
-          this.publish(`ae:${engineId}:shouldCreateSave`, '', { isAutosave: true });
+          eBus.publish('shouldCreateSave', '', { isAutosave: true });
         } else if (maxAutosaves > 0) {
           const autosave = autosaves.sortBy('updated').get('firstObject');
 
-          this.publish(`ae:${engineId}:shouldUpdateSave`, autosave);
+          eBus.publish('shouldUpdateSave', autosave);
         }
       });
     });
