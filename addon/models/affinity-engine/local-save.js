@@ -13,7 +13,7 @@ const {
 
 const configurationTiers = [
   'config.attrs.plugins.dataManager',
-  'config.attrs'
+  'config.attrs.global'
 ];
 
 export default Model.extend(LokiJSModelMixin, {

@@ -90,9 +90,8 @@ test('`shouldWriteAutosave` updates the oldest autosave if maxAutosaves has been
 });
 
 const configurationTiers = [
-  'config.attrs.autosaveManager',
-  'config.attrs.dataManager',
-  'config.attrs.globals'
+  'config.attrs.plugin.dataManager',
+  'config.attrs.global'
 ];
 
 configurationTiers.forEach((tier) => {

@@ -12,7 +12,7 @@ const {
 
 const configurationTiers = [
   'config.attrs.plugin.dataManager',
-  'config.attrs'
+  'config.attrs.global'
 ];
 
 export default Service.extend({

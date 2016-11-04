@@ -6,9 +6,11 @@ export default {
       maxStatePoints: false
     }
   },
-  'affinity-engine': {
-    'data-manager': {
-      path: 'service:affinity-engine/data-manager-rewindable-lokijs'
+  registrant: {
+    'affinity-engine': {
+      'data-manager': {
+        path: 'service:affinity-engine/data-manager-rewindable-lokijs'
+      }
     }
   }
 };
