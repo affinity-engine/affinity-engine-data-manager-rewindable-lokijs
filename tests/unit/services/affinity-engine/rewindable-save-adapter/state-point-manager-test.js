@@ -71,7 +71,7 @@ test('shouldFileActiveState shifts old state points if they exceed maxStatePoint
 });
 
 const configurationTiers = [
-  'config.attrs.dataManager',
+  'config.attrs.plugin.dataManager',
   'config.attrs.global'
 ];
 
