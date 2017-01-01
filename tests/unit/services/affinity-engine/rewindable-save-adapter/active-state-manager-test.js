@@ -74,19 +74,38 @@ test('shouldSetStateValue sets a key value pair on activeState', function(assert
   assert.equal(service.get('activeState.foo'), 'baz', 'value was overwritten');
 });
 
-test('shouldSetStateValues sets the provided properties on activeState', function(assert) {
+test('shouldSetStateValueMax sets a maximum value that cannot be exceeded', function(assert) {
   assert.expect(2);
 
   const engineId = 'foo';
   const service = this.subject({ engineId });
 
-  publisher.get('eBus').publish('shouldSetStateValues', { foo: 1, bar: 1 });
+  publisher.get('eBus').publish('shouldSetStateValueMax', 'foo', 5);
+  publisher.get('eBus').publish('shouldSetStateValue', 'foo', 6);
 
-  assert.deepEqual(service.get('activeState'), { foo: 1, bar: 1 }, 'value was set');
+  assert.equal(service.get('activeState.foo'), 5, 'set value was capped');
 
-  publisher.get('eBus').publish('shouldSetStateValues', { foo: 2, baz: 2 });
+  publisher.get('eBus').publish('shouldSetStateValue', 'foo', 0);
+  publisher.get('eBus').publish('shouldIncrementStateValue', 'foo', 10);
 
-  assert.deepEqual(service.get('activeState'), { foo: 2, bar: 1, baz: 2 }, 'value was added and changed');
+  assert.equal(service.get('activeState.foo'), 5, 'increment value was capped');
+});
+
+test('shouldSetStateValueMin sets a minimum value that cannot be exceeded', function(assert) {
+  assert.expect(2);
+
+  const engineId = 'foo';
+  const service = this.subject({ engineId });
+
+  publisher.get('eBus').publish('shouldSetStateValueMin', 'foo', 5);
+  publisher.get('eBus').publish('shouldSetStateValue', 'foo', 3);
+
+  assert.equal(service.get('activeState.foo'), 5, 'set value was capped');
+
+  publisher.get('eBus').publish('shouldSetStateValue', 'foo', 10);
+  publisher.get('eBus').publish('shouldDecrementStateValue', 'foo', 10);
+
+  assert.equal(service.get('activeState.foo'), 5, 'decrement value was capped');
 });
 
 test('shouldDecrementStateValue decreases the stateValue', function(assert) {

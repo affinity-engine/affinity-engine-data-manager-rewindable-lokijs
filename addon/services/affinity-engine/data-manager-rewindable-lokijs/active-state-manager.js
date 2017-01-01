@@ -6,8 +6,9 @@ const {
   assign,
   computed,
   get,
+  isPresent,
   set,
-  setProperties
+  typeOf
 } = Ember;
 
 export default Service.extend({
@@ -27,7 +28,8 @@ export default Service.extend({
     eBus.subscribe('shouldLoadLatestStatePoint', this, this._loadLatestStatePoint);
 
     eBus.subscribe('shouldSetStateValue', this, this._setStateValue);
-    eBus.subscribe('shouldSetStateValues', this, this._setStateValues);
+    eBus.subscribe('shouldSetStateValueMax', this, this._setStateValueMax);
+    eBus.subscribe('shouldSetStateValueMin', this, this._setStateValueMin);
     eBus.subscribe('shouldDecrementStateValue', this, this._decrementStateValue);
     eBus.subscribe('shouldIncrementStateValue', this, this._incrementStateValue);
     eBus.subscribe('shouldToggleStateValue', this, this._toggleStateValue);
@@ -49,19 +51,31 @@ export default Service.extend({
   },
 
   _setStateValue(key, value) {
-    set(this, `activeState.${key}`, value);
+    set(this, `activeState.${key}`, this._cappedNumber(key, value));
   },
 
-  _setStateValues(properties) {
-    setProperties(get(this, 'activeState'), properties);
+  _setStateValueMax(key, value) {
+    const maxMap = get(this, 'activeState._maxMap') || set(this, 'activeState._maxMap', {});
+
+    set(maxMap, key, value);
+  },
+
+  _setStateValueMin(key, value) {
+    const minMap = get(this, 'activeState._minMap') || set(this, 'activeState._minMap', {});
+
+    set(minMap, key, value);
   },
 
   _decrementStateValue(key, amount) {
-    this.decrementProperty(`activeState.${key}`, amount);
+    const newValue = this.decrementProperty(`activeState.${key}`, amount);
+
+    this._setStateValue(key, newValue);
   },
 
   _incrementStateValue(key, amount) {
-    this.incrementProperty(`activeState.${key}`, amount);
+    const newValue = this.incrementProperty(`activeState.${key}`, amount);
+
+    this._setStateValue(key, newValue);
   },
 
   _toggleStateValue(key) {
@@ -70,5 +84,20 @@ export default Service.extend({
 
   _deleteStateValue(key) {
     this._setStateValue(key, undefined);
+  },
+
+  _cappedNumber(key, value) {
+    if (typeOf(value) === 'number') {
+      const max = get(this, `activeState._maxMap.${key}`);
+      const min = get(this, `activeState._minMap.${key}`);
+
+      if (isPresent(max) && value > max) {
+        return max;
+      } else if (isPresent(min) && value < min) {
+        return min;
+      }
+    }
+
+    return value
   }
 });
