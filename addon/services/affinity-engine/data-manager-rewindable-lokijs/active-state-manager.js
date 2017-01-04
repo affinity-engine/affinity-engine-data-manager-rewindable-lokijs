@@ -57,13 +57,22 @@ export default Service.extend({
   _setStateValueMax(key, value) {
     const maxMap = get(this, 'activeState._maxMap') || set(this, 'activeState._maxMap', {});
 
-    set(maxMap, key, value);
+    this._addToMinMaxMap(maxMap, key, value);
   },
 
   _setStateValueMin(key, value) {
     const minMap = get(this, 'activeState._minMap') || set(this, 'activeState._minMap', {});
 
-    set(minMap, key, value);
+    this._addToMinMaxMap(minMap, key, value);
+  },
+
+  _addToMinMaxMap(map, key, value) {
+    const segments = key.split('.');
+    const lastIndex = segments.length - 1;
+
+    segments.reduce((map, section, index) => {
+      return lastIndex === index ? set(map, section, value) : get(map, section) || set(map, section, {});
+    }, map);
   },
 
   _decrementStateValue(key, amount) {
