@@ -123,6 +123,33 @@ test('shouldDecrementStateValue decreases the stateValue', function(assert) {
   assert.deepEqual(service.get('activeState.foo'), -6, 'accepts additional values');
 });
 
+test('shouldPushArrayStateValue adds items to an array', function(assert) {
+  assert.expect(2);
+
+  const engineId = 'foo';
+  const service = this.subject({ engineId });
+
+  publisher.get('eBus').publish('shouldPushArrayStateValue', 'foo', 10, 20);
+
+  assert.deepEqual(service.get('activeState.foo'), [10, 20], 'initializes value if blank');
+
+  publisher.get('eBus').publish('shouldPushArrayStateValue', 'foo', 30, 40);
+
+  assert.deepEqual(service.get('activeState.foo'), [10, 20, 30, 40], 'accepts additional values');
+});
+
+test('shouldRemoveStateValue adds items to an array', function(assert) {
+  assert.expect(1);
+
+  const engineId = 'foo';
+  const service = this.subject({ engineId });
+
+  publisher.get('eBus').publish('shouldPushArrayStateValue', 'foo', 10, 20, 30, 40, 50, 60, 70);
+  publisher.get('eBus').publish('shouldRemoveArrayStateValue', 'foo', 40, 20, 60, 999999999);
+
+  assert.deepEqual(service.get('activeState.foo'), [10, 30, 50, 70], 'removes values');
+});
+
 test('shouldIncrementStateValue increases the stateValue', function(assert) {
   assert.expect(2);
 

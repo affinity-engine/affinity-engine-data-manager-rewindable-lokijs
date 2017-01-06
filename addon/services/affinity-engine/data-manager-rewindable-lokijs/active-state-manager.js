@@ -30,6 +30,8 @@ export default Service.extend({
     eBus.subscribe('shouldSetStateValue', this, this._setStateValue);
     eBus.subscribe('shouldSetStateValueMax', this, this._setStateValueMax);
     eBus.subscribe('shouldSetStateValueMin', this, this._setStateValueMin);
+    eBus.subscribe('shouldPushArrayStateValue', this, this._pushArrayStateValue);
+    eBus.subscribe('shouldRemoveArrayStateValue', this, this._removeArrayStateValue);
     eBus.subscribe('shouldDecrementStateValue', this, this._decrementStateValue);
     eBus.subscribe('shouldIncrementStateValue', this, this._incrementStateValue);
     eBus.subscribe('shouldToggleStateValue', this, this._toggleStateValue);
@@ -73,6 +75,18 @@ export default Service.extend({
     segments.reduce((map, section, index) => {
       return lastIndex === index ? set(map, section, value) : get(map, section) || set(map, section, {});
     }, map);
+  },
+
+  _pushArrayStateValue(key, ...values) {
+    const array = get(this, `activeState.${key}`) || set(this, `activeState.${key}`, []);
+
+    values.forEach((value) => array.push(value));
+  },
+
+  _removeArrayStateValue(key, ...values) {
+    const array = get(this, `activeState.${key}`) || set(this, `activeState.${key}`, []);
+
+    values.filter((value) => array.indexOf(value) > -1).sort((a, b) => array.indexOf(b) - array.indexOf(a)).forEach((value) => array.splice(array.indexOf(value), 1));
   },
 
   _decrementStateValue(key, amount) {
