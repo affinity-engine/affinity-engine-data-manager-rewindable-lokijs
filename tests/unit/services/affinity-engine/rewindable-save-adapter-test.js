@@ -92,33 +92,7 @@ test('shouldCreateSave creates a save', function(assert) {
 
   next(() => {
     store.findRecord('affinity-engine/local-save', 1).then((record) => {
-      assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 2, bar: 1, baz: 2 }], 'statePoints are correct');
-      assert.equal(record.get('engineId'), engineId, 'engineId is correct');
-      assert.equal(record.get('name'), name, 'name is correct');
-      assert.equal(record.get('version'), version, 'version is correct');
-      assert.equal(record.get('autosave'), true, 'options applied correctly');
-    })
-  });
-});
-
-test('shouldCreateSave creates a save, even when there are no statePoints', function(assert) {
-  assert.expect(5);
-
-  const engineId = 'foo';
-  const version = '1.0.0';
-  const activeState = { foo: 2, baz: 2 };
-  const name = 'nom';
-  const options = { autosave: true };
-  const service = this.subject({ activeState, engineId, version });
-  const store = service.get('store');
-
-  run(() => {
-    publisher.get('eBus').publish('shouldCreateSave', name, options);
-  });
-
-  next(() => {
-    store.findRecord('affinity-engine/local-save', 1).then((record) => {
-      assert.deepEqual(record.get('statePoints'), [{ foo: 2, baz: 2 }], 'statePoints are correct');
+      assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 1, bar: 1 }], 'statePoints are correct');
       assert.equal(record.get('engineId'), engineId, 'engineId is correct');
       assert.equal(record.get('name'), name, 'name is correct');
       assert.equal(record.get('version'), version, 'version is correct');
@@ -147,7 +121,7 @@ test('shouldUpdateSave updates a save', function(assert) {
 
   next(() => {
     store.findRecord('affinity-engine/local-save', 1).then((record) => {
-      assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 2, bar: 1, baz: 2 }], 'statePoints are correct');
+      assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 1, bar: 1 }], 'statePoints are correct');
       assert.equal(record.get('engineId'), engineId, 'engineId is correct');
       assert.equal(record.get('name'), name, 'name is correct');
       assert.equal(record.get('version'), version, 'version is correct');

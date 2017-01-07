@@ -4,11 +4,9 @@ import multiton from 'ember-multiton-service';
 
 const {
   Service,
-  assign,
   computed,
   get,
   getProperties,
-  isEmpty,
   run,
   setProperties
 } = Ember;
@@ -28,13 +26,8 @@ export default Service.extend({
   eBus: multiton('message-bus', 'engineId'),
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
-  activeState: reads('activeStateManager.activeState'),
-  data: reads('activeState'),
+  data: reads('activeStateManager.activeState'),
   statePoints: reads('statePointManager.statePoints'),
-
-  getStateValue(key) {
-    return get(this, `activeState.${key}`);
-  },
 
   init(...args) {
     this._super(...args);
@@ -112,15 +105,6 @@ export default Service.extend({
   },
 
   _getCurrentStatePoints() {
-    const statePoints = nativeCopy(get(this, 'statePoints'));
-    const activeState = nativeCopy(get(this, 'activeState'));
-
-    if (isEmpty(statePoints)) { statePoints.push({}); }
-
-    const lastIndex = statePoints.length - 1;
-
-    statePoints[lastIndex] = assign({}, statePoints[lastIndex], activeState);
-
-    return statePoints;
+    return nativeCopy(get(this, 'statePoints'));
   }
 });
