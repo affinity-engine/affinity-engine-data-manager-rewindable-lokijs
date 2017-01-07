@@ -50,6 +50,22 @@ test('saves returns a promise of all saves namespaced to engineId', function(ass
   });
 });
 
+test('data returns the last statePoint', function(assert) {
+  assert.expect(2);
+
+  const engineId = 'foo';
+  const statePoints = Ember.A([{}, {}, { foo: 1, bar: 1 }]);
+  const service = this.subject({ engineId, statePoints });
+
+  assert.equal(service.get('data'), statePoints[2], 'is correct initially');
+
+  statePoints.pushObject({ baz: 2 });
+
+  run(() => {
+    assert.equal(service.get('data'), statePoints[3], 'is correct after pushObject');
+  })
+});
+
 test('mostRecentSave returns a promise of the most recent save', function(assert) {
   assert.expect(2);
 
@@ -80,10 +96,9 @@ test('shouldCreateSave creates a save', function(assert) {
   const engineId = 'foo';
   const version = '1.0.0';
   const statePoints = [{}, {}, { foo: 1, bar: 1 }];
-  const activeState = { foo: 2, baz: 2 };
   const name = 'nom';
   const options = { autosave: true };
-  const service = this.subject({ activeState, engineId, statePoints, version });
+  const service = this.subject({ engineId, statePoints, version });
   const store = service.get('store');
 
   run(() => {
@@ -107,10 +122,9 @@ test('shouldUpdateSave updates a save', function(assert) {
   const engineId = 'foo';
   const version = '1.0.0';
   const statePoints = [{}, {}, { foo: 1, bar: 1 }];
-  const activeState = { foo: 2, baz: 2 };
   const name = 'nom';
   const options = { autosave: true };
-  const service = this.subject({ activeState, engineId, statePoints, version });
+  const service = this.subject({ engineId, statePoints, version });
   const store = service.get('store');
 
   run(() => {

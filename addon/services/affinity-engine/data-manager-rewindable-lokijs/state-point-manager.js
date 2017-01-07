@@ -21,7 +21,7 @@ export default Service.extend({
 
   maxStatePoints: configurable(configurationTiers, 'maxStatePoints'),
 
-  statePoints: computed(() => []),
+  statePoints: computed(() => Ember.A([])),
 
   init(...args) {
     this._super(...args);
@@ -34,7 +34,7 @@ export default Service.extend({
   },
 
   _reset() {
-    set(this, 'statePoints', []);
+    set(this, 'statePoints', Ember.A([]));
   },
 
   _loadStatePoints(statePoints) {
@@ -45,10 +45,10 @@ export default Service.extend({
     const maxStatePoints = get(this, 'maxStatePoints');
     const statePoints = get(this, 'statePoints');
 
-    statePoints.push(assign({}, activeState));
+    statePoints.pushObject(assign({}, activeState));
 
     while (statePoints.length > maxStatePoints) {
-      statePoints.shift();
+      statePoints.shiftObject();
     }
   }
 });

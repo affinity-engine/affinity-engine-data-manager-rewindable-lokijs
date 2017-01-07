@@ -63,7 +63,7 @@ test('shouldFileActiveState shifts old state points if they exceed maxStatePoint
   assert.expect(1);
 
   const engineId = 'foo';
-  const service = this.subject({ engineId, maxStatePoints: 3, statePoints: [1, 2, 3] });
+  const service = this.subject({ engineId, maxStatePoints: 3, statePoints: Ember.A([1, 2, 3]) });
 
   publisher.get('eBus').publish('rsa:shouldFileActiveState', { });
 

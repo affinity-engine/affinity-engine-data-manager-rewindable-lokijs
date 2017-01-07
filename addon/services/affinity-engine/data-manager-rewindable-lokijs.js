@@ -26,8 +26,13 @@ export default Service.extend({
   eBus: multiton('message-bus', 'engineId'),
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
-  data: reads('activeStateManager.activeState'),
   statePoints: reads('statePointManager.statePoints'),
+
+  data: computed('statePoints.lastObject', {
+    get() {
+      return get(this, 'statePoints.lastObject') || {};
+    }
+  }),
 
   init(...args) {
     this._super(...args);
