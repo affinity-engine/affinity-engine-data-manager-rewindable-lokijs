@@ -29,6 +29,7 @@ export default Service.extend({
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   activeState: reads('activeStateManager.activeState'),
+  data: read('activeState'),
   statePoints: reads('statePointManager.statePoints'),
 
   getStateValue(key) {
