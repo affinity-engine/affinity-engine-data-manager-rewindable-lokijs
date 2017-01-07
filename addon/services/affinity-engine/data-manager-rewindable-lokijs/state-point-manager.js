@@ -7,6 +7,7 @@ const {
   assign,
   computed,
   get,
+  getProperties,
   set
 } = Ember;
 
@@ -22,6 +23,11 @@ export default Service.extend({
   maxStatePoints: configurable(configurationTiers, 'maxStatePoints'),
 
   statePoints: computed(() => Ember.A([])),
+  activeState: computed('statePoints.lastObject', {
+    get() {
+      return assign({}, get(this, 'statePoints.lastObject'));
+    }
+  }),
 
   init(...args) {
     this._super(...args);
@@ -30,7 +36,7 @@ export default Service.extend({
 
     eBus.subscribe('restartingEngine', this, this._reset);
     eBus.subscribe('shouldLoadLatestStatePoint', this, this._loadStatePoints);
-    eBus.subscribe('rsa:shouldFileActiveState', this, this._shouldFileActiveState);
+    eBus.subscribe('shouldFileActiveState', this, this._shouldFileActiveState);
   },
 
   _reset() {
@@ -38,12 +44,11 @@ export default Service.extend({
   },
 
   _loadStatePoints(statePoints) {
-    set(this, 'statePoints', statePoints);
+    set(this, 'statePoints', Ember.A(statePoints));
   },
 
-  _shouldFileActiveState(activeState) {
-    const maxStatePoints = get(this, 'maxStatePoints');
-    const statePoints = get(this, 'statePoints');
+  _shouldFileActiveState() {
+    const { activeState, maxStatePoints, statePoints } = getProperties(this, 'activeState', 'maxStatePoints', 'statePoints');
 
     statePoints.pushObject(assign({}, activeState));
 

@@ -50,20 +50,14 @@ test('saves returns a promise of all saves namespaced to engineId', function(ass
   });
 });
 
-test('data returns the last statePoint', function(assert) {
-  assert.expect(2);
+test('data returns the activeState', function(assert) {
+  assert.expect(1);
 
   const engineId = 'foo';
-  const statePoints = Ember.A([{}, {}, { foo: 1, bar: 1 }]);
-  const service = this.subject({ engineId, statePoints });
+  const statePointManager = { activeState: 'bar' };
+  const service = this.subject({ engineId, statePointManager });
 
-  assert.equal(service.get('data'), statePoints[2], 'is correct initially');
-
-  statePoints.pushObject({ baz: 2 });
-
-  run(() => {
-    assert.equal(service.get('data'), statePoints[3], 'is correct after pushObject');
-  })
+  assert.equal(service.get('data'), 'bar', 'is correct initially');
 });
 
 test('mostRecentSave returns a promise of the most recent save', function(assert) {

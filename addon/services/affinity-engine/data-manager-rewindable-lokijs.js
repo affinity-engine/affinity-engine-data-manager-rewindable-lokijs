@@ -11,7 +11,7 @@ const {
   setProperties
 } = Ember;
 
-const { reads } = computed;
+const { alias, reads } = computed;
 
 const { RSVP: { Promise } } = Ember;
 const { inject: { service } } = Ember;
@@ -27,12 +27,7 @@ export default Service.extend({
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   statePoints: reads('statePointManager.statePoints'),
-
-  data: computed('statePoints.lastObject', {
-    get() {
-      return get(this, 'statePoints.lastObject') || {};
-    }
-  }),
+  data: alias('statePointManager.activeState'),
 
   init(...args) {
     this._super(...args);
