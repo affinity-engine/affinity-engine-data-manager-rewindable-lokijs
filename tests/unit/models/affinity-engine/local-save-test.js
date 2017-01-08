@@ -5,12 +5,12 @@ moduleForModel('affinity-engine/local-save', 'Unit | Model | affinity engine/loc
   needs: ['service:multiton-service-manager']
 });
 
-test('activeState returns the last of statePoints', function(assert) {
+test('lastState returns the last of statePoints', function(assert) {
   assert.expect(1);
 
   const model = this.subject({ statePoints: ['foo', 'bar', 'baz' ]});
 
-  assert.equal(model.get('activeState'), 'baz', 'is correct statePoint');
+  assert.equal(model.get('lastState'), 'baz', 'is correct statePoint');
 });
 
 test('updated returns meta.updated if available', function(assert) {

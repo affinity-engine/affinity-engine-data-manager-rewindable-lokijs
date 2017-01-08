@@ -50,11 +50,11 @@ test('saves returns a promise of all saves namespaced to engineId', function(ass
   });
 });
 
-test('data returns the activeState', function(assert) {
+test('data returns the stateBuffer', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
-  const statePointManager = { activeState: 'bar' };
+  const statePointManager = { stateBuffer: 'bar' };
   const service = this.subject({ engineId, statePointManager });
 
   assert.equal(service.get('data'), 'bar', 'is correct initially');

@@ -21,19 +21,18 @@ export default Service.extend({
 
   store: service(),
 
-  activeStateManager: multiton('affinity-engine/data-manager-rewindable-lokijs/active-state-manager', 'engineId'),
   autosaveManager: multiton('affinity-engine/data-manager-rewindable-lokijs/autosave-manager', 'engineId'),
   eBus: multiton('message-bus', 'engineId'),
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   statePoints: reads('statePointManager.statePoints'),
-  data: alias('statePointManager.activeState'),
+  data: alias('statePointManager.stateBuffer'),
 
   init(...args) {
     this._super(...args);
 
     // initialize managers
-    getProperties(this, 'activeStateManager', 'autosaveManager', 'statePointManager');
+    getProperties(this, 'autosaveManager', 'statePointManager');
 
     const eBus = get(this, 'eBus');
 

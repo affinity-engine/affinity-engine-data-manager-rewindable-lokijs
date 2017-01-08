@@ -27,7 +27,7 @@ export default Model.extend(LokiJSModelMixin, {
 
   dateFormat: configurable(configurationTiers, 'dateFormat'),
 
-  activeState: computed('statePoints.lastObject', {
+  lastState: computed('statePoints.lastObject', {
     get() {
       const statePoints = get(this, 'statePoints');
 
@@ -41,9 +41,9 @@ export default Model.extend(LokiJSModelMixin, {
     }
   }).readOnly(),
 
-  fullName: computed('name', 'activeState.sceneName', {
+  fullName: computed('name', 'lastState.sceneName', {
     get() {
-      let name = get(this, 'name') || get(this, 'activeState.sceneName');
+      let name = get(this, 'name') || get(this, 'lastState.sceneName');
 
       if (get(this, 'isAutosave')) {
         const autoTranslation = get(this, 'translator').translate('affinity-engine.plugins.data-manager.autosave');
