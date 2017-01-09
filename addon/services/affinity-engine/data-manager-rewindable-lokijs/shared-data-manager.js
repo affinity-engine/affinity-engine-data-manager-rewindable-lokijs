@@ -17,30 +17,30 @@ export default Service.extend({
   store: service(),
   eBus: multiton('message-bus', 'engineId'),
 
-  data: alias('metaState.dataMap'),
+  data: alias('sharedData.dataMap'),
 
   init(...args) {
     this._super(...args);
 
-    get(this, 'eBus').subscribe('shouldPersistMetaState', this, this._persistMetaState);
+    get(this, 'eBus').subscribe('shouldPersistSharedData', this, this._persistSharedData);
 
-    this._setMetaState();
+    this._setSharedData();
   },
 
-  _setMetaState() {
+  _setSharedData() {
     const { engineId, store } = getProperties(this, 'engineId', 'store');
 
     store.queryRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', { engineId }).
-      then((metaState) => set(this, 'metaState', metaState)).
+      then((sharedData) => set(this, 'sharedData', sharedData)).
       catch(() => {
         store.createRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', {
           engineId,
           dataMap: {}
-        }).save().then((metaState) => set(this, 'metaState', metaState));
+        }).save().then((sharedData) => set(this, 'sharedData', sharedData));
       });
   },
 
-  _persistMetaState() {
-    get(this, 'metaState').save();
+  _persistSharedData() {
+    get(this, 'sharedData').save();
   }
 });

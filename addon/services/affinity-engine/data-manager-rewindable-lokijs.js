@@ -28,7 +28,7 @@ export default Service.extend({
 
   statePoints: reads('statePointManager.statePoints'),
   data: alias('statePointManager.stateBuffer'),
-  dataMap: alias('dataMapManager.data'),
+  sharedData: alias('sharedDataManager.data'),
 
   init(...args) {
     this._super(...args);

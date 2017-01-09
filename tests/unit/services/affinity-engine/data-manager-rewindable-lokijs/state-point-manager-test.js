@@ -31,16 +31,33 @@ test('stateBuffer returns a clone of the latest statePoint', function(assert) {
   const statePoint = { bar: 'baz' };
   const service = this.subject({ engineId, statePoints: Ember.A([statePoint]) });
 
-  assert.deepEqual(service.get('stateBuffer'), statePoint, 'content is the same');
-  assert.notEqual(service.get('stateBuffer'), statePoint, 'object is different');
+  assert.deepEqual(service.get('stateBuffer').toPojo(), statePoint, 'content is the same');
+  assert.notEqual(service.get('stateBuffer').toPojo(), statePoint, 'object is different');
 
   service.set('statePoints', Ember.A([{ babble: 'fish' }]));
 
-  assert.deepEqual(service.get('stateBuffer'), { babble: 'fish' }, 'updates if statePoints changes');
+  assert.deepEqual(service.get('stateBuffer').toPojo(), { babble: 'fish' }, 'updates if statePoints changes');
 
   service.get('statePoints').pushObject({ ocra: 'corn' });
 
-  assert.deepEqual(service.get('stateBuffer'), { ocra: 'corn' }, 'updates if statePoint length changes');
+  assert.deepEqual(service.get('stateBuffer').toPojo(), { ocra: 'corn' }, 'updates if statePoint length changes');
+});
+
+test('stateBuffer can set max values', function(assert) {
+  assert.expect(2);
+
+  const engineId = 'foo';
+  const service = this.subject({ engineId, statePoints: Ember.A([{ bar: 1 }]) });
+  const stateBuffer = service.get('stateBuffer');
+
+  stateBuffer.max('bar', 5);
+  stateBuffer.set('bar', 10);
+
+  assert.equal(stateBuffer.get('bar'), 5, 'cannot be set above max');
+
+  stateBuffer.incrementProperty('bar', 5);
+
+  assert.equal(stateBuffer.get('bar'), 5, 'cannot be incremented above max');
 });
 
 test('restartingEngine resets the statePoints', function(assert) {
@@ -66,28 +83,27 @@ test('shouldLoadLatestStatePoint sets the statePoints', function(assert) {
 });
 
 test('shouldFileStateBuffer pushes the stateBuffer to the statePoints', function(assert) {
-  assert.expect(2);
+  assert.expect(1);
 
   const engineId = 'foo';
-  const stateBuffer = { bar: 'baz' };
-  const service = this.subject({ engineId, stateBuffer });
-  const state = { foo: 'bar' };
+  const service = this.subject({ engineId, statePoints: Ember.A([{ foo: 'bar' }]) });
+
+  service.get('stateBuffer').set('baz', 'bumble');
 
   publisher.get('eBus').publish('shouldFileStateBuffer');
 
-  assert.deepEqual(service.get('statePoints'), [stateBuffer], 'stateBuffer got filed');
-  assert.ok(state !== service.get('statePoints')[1], 'cloned');
+  assert.deepEqual(service.get('statePoints'), [{ foo: 'bar' }, { foo: 'bar', baz: 'bumble' }], 'stateBuffer got filed');
 });
 
 test('shouldFileStateBuffer shifts old state points if they exceed maxStatePoints', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
-  const service = this.subject({ engineId, maxStatePoints: 3, statePoints: Ember.A([1, 2, 3]) });
+  const service = this.subject({ engineId, maxStatePoints: 3, statePoints: Ember.A([{ foo: 1 }, { foo: 2 }, { foo: 3 }]) });
 
   publisher.get('eBus').publish('shouldFileStateBuffer');
 
-  assert.deepEqual(service.get('statePoints'), [2, 3, { }], 'stateBuffer got filed and shifted');
+  assert.deepEqual(service.get('statePoints'), [{ foo: 2 }, { foo: 3 }, { foo: 3 }], 'stateBuffer got filed and shifted');
 });
 
 const configurationTiers = [

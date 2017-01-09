@@ -40,22 +40,22 @@ test('it creates or loads a shared state on init', function(assert) {
   });
 });
 
-test('shouldPersistMetaState saves the dataMap', function(assert) {
+test('shouldPersistSharedData saves the dataMap', function(assert) {
   assert.expect(2);
 
   const done = assert.async();
   const service = this.subject({ engineId: 'foo' });
 
   next(() => {
-    service.set('metaState.engineId', 'bar');
+    service.set('sharedData.engineId', 'bar');
 
-    assert.ok(service.get('metaState.hasDirtyAttributes'), 'metaState is dirty');
+    assert.ok(service.get('sharedData.hasDirtyAttributes'), 'sharedData is dirty');
 
     run(() => {
-      publisher.get('eBus').publish('shouldPersistMetaState');
+      publisher.get('eBus').publish('shouldPersistSharedData');
 
       next(() => {
-        assert.ok(!service.get('metaState.hasDirtyAttributes'), 'metaState is saved');
+        assert.ok(!service.get('sharedData.hasDirtyAttributes'), 'sharedData is saved');
 
         done();
       })
