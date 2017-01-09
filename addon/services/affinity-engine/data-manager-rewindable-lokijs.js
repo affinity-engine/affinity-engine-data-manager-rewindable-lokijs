@@ -60,7 +60,7 @@ export default Service.extend({
     get() {
       const engineId = get(this, 'engineId');
 
-      return get(this, 'store').query('affinity-engine/local-save', {
+      return get(this, 'store').query('affinity-engine/data-manager-rewindable-lokijs/save', {
         engineId
       });
     }
@@ -71,7 +71,7 @@ export default Service.extend({
     const version = get(this, 'version');
     const statePoints = this._getCurrentStatePoints();
 
-    get(this, 'store').createRecord('affinity-engine/local-save', {
+    get(this, 'store').createRecord('affinity-engine/data-manager-rewindable-lokijs/save', {
       engineId,
       name,
       statePoints,

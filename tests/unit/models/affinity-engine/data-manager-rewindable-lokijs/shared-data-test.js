@@ -1,6 +1,6 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('affinity-engine/meta-state', 'Unit | Model | affinity engine/meta state', {
+moduleForModel('affinity-engine/data-manager-rewindable-lokijs/shared-data', 'Unit | Model | affinity engine/data manager rewindable lokijs/shared data', {
   // Specify the other units that are required for this test.
   needs: []
 });

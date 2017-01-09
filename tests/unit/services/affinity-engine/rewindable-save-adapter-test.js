@@ -37,15 +37,15 @@ test('saves returns a promise of all saves namespaced to engineId', function(ass
   const store = service.get('store');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { engineId }).save().then(() => {
-      return store.createRecord('affinity-engine/local-save', { engineId }).save();
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId }).save().then(() => {
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId }).save();
     }).then(() => {
-      return store.createRecord('affinity-engine/local-save', { engineId: 'bar' }).save();
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId: 'bar' }).save();
     }).then(() => {
       return service.get('saves');
     }).then((saves) => {
       assert.equal(saves.get('length'), 2, 'is correctly filtered');
-      assert.equal(saves.get('firstObject.constructor.modelName'), 'affinity-engine/local-save', 'correct model');
+      assert.equal(saves.get('firstObject.constructor.modelName'), 'affinity-engine/data-manager-rewindable-lokijs/save', 'correct model');
     });
   });
 });
@@ -68,16 +68,16 @@ test('mostRecentSave returns a promise of the most recent save', function(assert
   const store = service.get('store');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { engineId, name: 'foo' }).save().then(() => {
-      return store.createRecord('affinity-engine/local-save', { engineId, name: 'bar' }).save();
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, name: 'foo' }).save().then(() => {
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, name: 'bar' }).save();
     }).then(() => {
-      return store.createRecord('affinity-engine/local-save', { engineId, name: 'baz' }).save();
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, name: 'baz' }).save();
     }).then(() => {
       return service.get('mostRecentSave');
     }).then((mostRecentSave) => {
       assert.equal(mostRecentSave.get('name'), 'baz', 'using createdAt');
 
-      return store.peekRecord('affinity-engine/local-save', 2).save();
+      return store.peekRecord('affinity-engine/data-manager-rewindable-lokijs/save', 2).save();
     }).then((mostRecentSave) => {
       assert.equal(mostRecentSave.get('name'), 'bar', 'using updatedAt');
     });
@@ -100,7 +100,7 @@ test('shouldCreateSave creates a save', function(assert) {
   });
 
   next(() => {
-    store.findRecord('affinity-engine/local-save', 1).then((record) => {
+    store.findRecord('affinity-engine/data-manager-rewindable-lokijs/save', 1).then((record) => {
       assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 1, bar: 1 }], 'statePoints are correct');
       assert.equal(record.get('engineId'), engineId, 'engineId is correct');
       assert.equal(record.get('name'), name, 'name is correct');
@@ -122,13 +122,13 @@ test('shouldUpdateSave updates a save', function(assert) {
   const store = service.get('store');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { name, engineId: 'bar', statePoints: [{ blah: 'blah' }]}).save().then((record) => {
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { name, engineId: 'bar', statePoints: [{ blah: 'blah' }]}).save().then((record) => {
       publisher.get('eBus').publish('shouldUpdateSave', record, options);
     });
   });
 
   next(() => {
-    store.findRecord('affinity-engine/local-save', 1).then((record) => {
+    store.findRecord('affinity-engine/data-manager-rewindable-lokijs/save', 1).then((record) => {
       assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 1, bar: 1 }], 'statePoints are correct');
       assert.equal(record.get('engineId'), engineId, 'engineId is correct');
       assert.equal(record.get('name'), name, 'name is correct');
@@ -146,13 +146,13 @@ test('shouldDeleteSave deletes a save', function(assert) {
   const store = service.get('store');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { engineId }).save().then((record) => {
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId }).save().then((record) => {
       publisher.get('eBus').publish('shouldDeleteSave', record);
     });
   });
 
   next(() => {
-    store.findAll('affinity-engine/local-save').then((records) => {
+    store.findAll('affinity-engine/data-manager-rewindable-lokijs/save').then((records) => {
       assert.equal(records.get('length'), 0, 'record deleted');
     })
   });
@@ -169,7 +169,7 @@ test('shouldLoadSave reloads the record and then triggers shouldLoadLatestStateP
   assert.willPublish('shouldLoadLatestStatePoint', [statePoints], 'shouldLoadLatestStatePoint with reloaded statePoints');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { engineId, statePoints }).save().then((record) => {
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, statePoints }).save().then((record) => {
       record.set('statePoints', ['oooops']);
 
       publisher.get('eBus').publish('shouldLoadSave', record);

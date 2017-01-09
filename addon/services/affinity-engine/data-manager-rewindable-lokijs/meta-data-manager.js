@@ -30,10 +30,10 @@ export default Service.extend({
   _setMetaState() {
     const { engineId, store } = getProperties(this, 'engineId', 'store');
 
-    store.queryRecord('affinity-engine/meta-state', { engineId }).
+    store.queryRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', { engineId }).
       then((metaState) => set(this, 'metaState', metaState)).
       catch(() => {
-        store.createRecord('affinity-engine/meta-state', {
+        store.createRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', {
           engineId,
           metaData: {}
         }).save().then((metaState) => set(this, 'metaState', metaState));

@@ -1,6 +1,6 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('affinity-engine/local-save', 'Unit | Model | affinity engine/local save', {
+moduleForModel('affinity-engine/data-manager-rewindable-lokijs/save', 'Unit | Model | affinity engine/data manager rewindable lokijs/save', {
   // Specify the other units that are required for this test.
   needs: ['service:multiton-service-manager']
 });
