@@ -18,23 +18,30 @@ const addToMap = function addToMap(map, key, value) {
 
 export default Ember.Object.extend({
   decrementProperty(key, amount = 1) {
-    const min = get(this, `_minMap.${key}`);
-    const currentValue = get(this, key);
-    const newValue = currentValue - amount;
-
-    return newValue < min ? min : newValue;
+    return this.set(key, get(this, key) - amount);
   },
 
   incrementProperty(key, amount = 1) {
-    const max = get(this, `_maxMap.${key}`);
-    const currentValue = get(this, key);
-    const newValue = currentValue + amount;
-
-    return newValue > max ? max : newValue;
+    return this.set(key, get(this, key) + amount);
   },
 
   set(key, value) {
     return this._super(key, this._getCappedNumber(key, value));
+  },
+
+  setProperties(hash) {
+    return this._deepSet(hash);
+  },
+
+  _deepSet(hash, path) {
+    return Object.keys(hash).reduce((accumulator, key) => {
+      const fullPath = path ? `${path}.${key}` : key;
+      const value = get(hash, key);
+
+      accumulator[key] = this.set(fullPath, typeOf(value) === 'object' ? this._deepSet(value, fullPath) : value);
+
+      return accumulator;
+    }, {});
   },
 
   max(key, value) {
