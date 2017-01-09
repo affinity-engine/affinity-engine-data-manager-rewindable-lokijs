@@ -23,16 +23,18 @@ export default Service.extend({
 
   autosaveManager: multiton('affinity-engine/data-manager-rewindable-lokijs/autosave-manager', 'engineId'),
   eBus: multiton('message-bus', 'engineId'),
+  metaDataManager: multiton('affinity-engine/data-manager-rewindable-lokijs/meta-data-manager', 'engineId'),
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   statePoints: reads('statePointManager.statePoints'),
   data: alias('statePointManager.stateBuffer'),
+  metaData: alias('metaDataManager.data'),
 
   init(...args) {
     this._super(...args);
 
     // initialize managers
-    getProperties(this, 'autosaveManager', 'statePointManager');
+    getProperties(this, 'autosaveManager', 'metaDataManager', 'statePointManager');
 
     const eBus = get(this, 'eBus');
 
@@ -42,7 +44,7 @@ export default Service.extend({
     eBus.subscribe('shouldLoadSave', this, this._loadRecord);
   },
 
-  mostRecentSave: computed({
+  mostRecentSave: computed('saves.@each.update', {
     get() {
       return new Promise((resolve) => {
         get(this, 'saves').then((saves) => {
@@ -52,9 +54,9 @@ export default Service.extend({
         });
       });
     }
-  }).volatile(),
+  }),
 
-  saves: computed({
+  saves: computed('engineid', {
     get() {
       const engineId = get(this, 'engineId');
 

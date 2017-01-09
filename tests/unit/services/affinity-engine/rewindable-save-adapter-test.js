@@ -92,7 +92,7 @@ test('shouldCreateSave creates a save', function(assert) {
   const statePoints = [{}, {}, { foo: 1, bar: 1 }];
   const name = 'nom';
   const options = { autosave: true };
-  const service = this.subject({ engineId, statePoints, version });
+  const service = this.subject({ engineId, statePoints, version, metaDataManager: {} });
   const store = service.get('store');
 
   run(() => {
@@ -118,7 +118,7 @@ test('shouldUpdateSave updates a save', function(assert) {
   const statePoints = [{}, {}, { foo: 1, bar: 1 }];
   const name = 'nom';
   const options = { autosave: true };
-  const service = this.subject({ engineId, statePoints, version });
+  const service = this.subject({ engineId, statePoints, version, metaDataManager: {} });
   const store = service.get('store');
 
   run(() => {
@@ -142,7 +142,7 @@ test('shouldDeleteSave deletes a save', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
-  const service = this.subject({ engineId });
+  const service = this.subject({ engineId, metaDataManager: {} });
   const store = service.get('store');
 
   run(() => {
