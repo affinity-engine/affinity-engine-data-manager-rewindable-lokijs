@@ -28,7 +28,7 @@ export default Service.extend({
 
   statePoints: reads('statePointManager.statePoints'),
   data: alias('statePointManager.stateBuffer'),
-  metaData: alias('metaDataManager.data'),
+  dataMap: alias('dataMapManager.data'),
 
   init(...args) {
     this._super(...args);

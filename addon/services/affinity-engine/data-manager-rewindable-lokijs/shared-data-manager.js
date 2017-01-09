@@ -17,7 +17,7 @@ export default Service.extend({
   store: service(),
   eBus: multiton('message-bus', 'engineId'),
 
-  data: alias('metaState.metaData'),
+  data: alias('metaState.dataMap'),
 
   init(...args) {
     this._super(...args);
@@ -35,7 +35,7 @@ export default Service.extend({
       catch(() => {
         store.createRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', {
           engineId,
-          metaData: {}
+          dataMap: {}
         }).save().then((metaState) => set(this, 'metaState', metaState));
       });
   },

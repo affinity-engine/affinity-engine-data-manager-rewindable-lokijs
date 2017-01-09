@@ -4,5 +4,5 @@ import { LokiJSModelMixin } from 'ember-lokijs';
 
 export default Model.extend(LokiJSModelMixin, {
   engineId: attr('string'),
-  metaData: attr()
+  dataMap: attr()
 });

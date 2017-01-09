@@ -40,7 +40,7 @@ test('it creates or loads a shared state on init', function(assert) {
   });
 });
 
-test('shouldPersistMetaState saves the metaData', function(assert) {
+test('shouldPersistMetaState saves the dataMap', function(assert) {
   assert.expect(2);
 
   const done = assert.async();
