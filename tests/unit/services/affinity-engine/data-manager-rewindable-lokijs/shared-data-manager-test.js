@@ -14,7 +14,7 @@ const { next } = run;
 const Publisher = Ember.Object.extend({ eBus: multiton('message-bus', 'engineId'), engineId: 'foo' });
 let publisher;
 
-moduleFor('service:affinity-engine/data-manager-rewindable-lokijs/meta-data-manager', 'Unit | Service | affinity engine/rewindable save adapter/meta data manager', {
+moduleFor('service:affinity-engine/data-manager-rewindable-lokijs/shared-data-manager', 'Unit | Service | affinity engine/rewindable save adapter/shared data manager', {
   integration: true,
 
   beforeEach() {

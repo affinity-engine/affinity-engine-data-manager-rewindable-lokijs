@@ -35,7 +35,7 @@ export default Service.extend({
     get() {
       const engineId = get(this, 'engineId');
 
-      return get(this, 'store').query('affinity-engine/local-save', {
+      return get(this, 'store').query('affinity-engine/data-manager-rewindable-lokijs/save', {
         engineId,
         isAutosave: true
       });

@@ -35,12 +35,12 @@ test('`autosaves` returns a filtered list of saves that are autosaves with the c
   const store = service.get('store');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save().then(() => {
-      return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId }).save().then(() => {
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId }).save();
     }).then(() => {
-      return store.createRecord('affinity-engine/local-save', { isAutosave: false, engineId }).save();
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: false, engineId }).save();
     }).then(() => {
-      return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId: 'bar' }).save();
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId: 'bar' }).save();
     }).then(() => {
       return service.get('autosaves');
     }).then((autosaves) => {
@@ -60,8 +60,8 @@ test('`shouldWriteAutosave` creates a new autosave if maxAutosaves has not been 
   assert.willNotPublish('shouldUpdateSave', 'shouldUpdateSave should not be triggered');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save().then(() => {
-      return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId }).save().then(() => {
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId }).save();
     }).then(() => {
       publisher.get('eBus').publish('shouldWriteAutosave');
     });
@@ -79,10 +79,10 @@ test('`shouldWriteAutosave` updates the oldest autosave if maxAutosaves has been
   assert.willPublish('shouldUpdateSave', 'shouldUpdateSave was triggered');
 
   run(() => {
-    store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save().then(() => {
-      return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId }).save().then(() => {
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId }).save();
     }).then(() => {
-      return store.createRecord('affinity-engine/local-save', { isAutosave: true, engineId }).save();
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { isAutosave: true, engineId }).save();
     }).then(() => {
       publisher.get('eBus').publish('shouldWriteAutosave');
     });

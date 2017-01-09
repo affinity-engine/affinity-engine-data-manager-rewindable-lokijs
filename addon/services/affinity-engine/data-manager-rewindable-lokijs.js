@@ -23,7 +23,7 @@ export default Service.extend({
 
   autosaveManager: multiton('affinity-engine/data-manager-rewindable-lokijs/autosave-manager', 'engineId'),
   eBus: multiton('message-bus', 'engineId'),
-  metaDataManager: multiton('affinity-engine/data-manager-rewindable-lokijs/meta-data-manager', 'engineId'),
+  sharedDataManager: multiton('affinity-engine/data-manager-rewindable-lokijs/shared-data-manager', 'engineId'),
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   statePoints: reads('statePointManager.statePoints'),
@@ -34,7 +34,7 @@ export default Service.extend({
     this._super(...args);
 
     // initialize managers
-    getProperties(this, 'autosaveManager', 'metaDataManager', 'statePointManager');
+    getProperties(this, 'autosaveManager', 'sharedDataManager', 'statePointManager');
 
     const eBus = get(this, 'eBus');
 
