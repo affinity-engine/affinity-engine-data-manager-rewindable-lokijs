@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { nativeCopy } from 'affinity-engine';
+import StateBuffer from 'affinity-engine-data-manager-rewindable-lokijs/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
 import multiton from 'ember-multiton-service';
 
 const {
@@ -27,8 +28,27 @@ export default Service.extend({
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
   statePoints: reads('statePointManager.statePoints'),
-  data: alias('statePointManager.stateBuffer'),
+  stateBuffer: alias('statePointManager.stateBuffer'),
   sharedData: alias('sharedDataManager.data'),
+
+  data: computed('sharedData', 'stateBuffer', {
+    get() {
+      const { sharedData, stateBuffer } = getProperties(this, 'sharedData', 'stateBuffer');
+      const persistSharedData = () => get(this, 'eBus').publish('shouldPersistSharedData');
+
+      return StateBuffer.create({
+        content: stateBuffer,
+        getSharedData() {
+          return StateBuffer.create({
+            content: sharedData,
+            save() {
+              persistSharedData();
+            }
+          });
+        }
+      });
+    }
+  }),
 
   init(...args) {
     this._super(...args);

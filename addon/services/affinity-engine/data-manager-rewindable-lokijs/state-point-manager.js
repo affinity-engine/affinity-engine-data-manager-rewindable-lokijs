@@ -1,10 +1,10 @@
 import Ember from 'ember';
-import StateBuffer from 'affinity-engine-data-manager-rewindable-lokijs/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
 import { configurable } from 'affinity-engine';
 import multiton from 'ember-multiton-service';
 
 const {
   Service,
+  assign,
   computed,
   get,
   getProperties,
@@ -25,7 +25,7 @@ export default Service.extend({
   statePoints: computed(() => Ember.A([])),
   stateBuffer: computed('statePoints.lastObject', {
     get() {
-      return StateBuffer.create(get(this, 'statePoints.lastObject'));
+      return assign({}, get(this, 'statePoints.lastObject'));
     }
   }),
 
@@ -50,7 +50,7 @@ export default Service.extend({
   _fileStateBuffer() {
     const { stateBuffer, maxStatePoints, statePoints } = getProperties(this, 'stateBuffer', 'maxStatePoints', 'statePoints');
 
-    statePoints.pushObject(stateBuffer.toPojo());
+    statePoints.pushObject(stateBuffer);
 
     while (statePoints.length > maxStatePoints) {
       statePoints.shiftObject();

@@ -16,7 +16,7 @@ const addToMap = function addToMap(map, key, value) {
   }, map);
 };
 
-export default Ember.Object.extend({
+export default Ember.ObjectProxy.extend({
   decrementProperty(key, amount = 1) {
     return this.set(key, get(this, key) - amount);
   },
@@ -26,7 +26,7 @@ export default Ember.Object.extend({
   },
 
   set(key, value) {
-    return this._super(key, this._getCappedNumber(key, value));
+    return set(get(this, 'content'), key, this._getCappedNumber(key, value));
   },
 
   setProperties(hash) {
@@ -45,21 +45,21 @@ export default Ember.Object.extend({
   },
 
   max(key, value) {
-    const maxMap = get(this, '_maxMap') || set(this, '_maxMap', {});
+    const maxMap = this.get('_maxMap') || this.set('_maxMap', {});
 
     addToMap(maxMap, key, value);
   },
 
   min(key, value) {
-    const minMap = get(this, '_minMap') || set(this, '_minMap', {});
+    const minMap = this.get('_minMap') || this.set('_minMap', {});
 
     addToMap(minMap, key, value);
   },
 
   _getCappedNumber(key, value) {
     if (typeOf(value) === 'number') {
-      const max = get(this, `_maxMap.${key}`);
-      const min = get(this, `_minMap.${key}`);
+      const max = this.get(`_maxMap.${key}`);
+      const min = this.get(`_minMap.${key}`);
 
       if (isPresent(max) && value > max) {
         return max;
@@ -69,13 +69,5 @@ export default Ember.Object.extend({
     }
 
     return value
-  },
-
-  toPojo() {
-    return Object.keys(this).reduce((pojo, key) => {
-      if (this.hasOwnProperty(key) && typeOf(get(this, key)) !== 'function') pojo[key] = get(this, key);
-
-      return pojo;
-    }, {});
   }
 });

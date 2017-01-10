@@ -31,33 +31,16 @@ test('stateBuffer returns a clone of the latest statePoint', function(assert) {
   const statePoint = { bar: 'baz' };
   const service = this.subject({ engineId, statePoints: Ember.A([statePoint]) });
 
-  assert.deepEqual(service.get('stateBuffer').toPojo(), statePoint, 'content is the same');
-  assert.notEqual(service.get('stateBuffer').toPojo(), statePoint, 'object is different');
+  assert.deepEqual(service.get('stateBuffer'), statePoint, 'content is the same');
+  assert.notEqual(service.get('stateBuffer'), statePoint, 'object is different');
 
   service.set('statePoints', Ember.A([{ babble: 'fish' }]));
 
-  assert.deepEqual(service.get('stateBuffer').toPojo(), { babble: 'fish' }, 'updates if statePoints changes');
+  assert.deepEqual(service.get('stateBuffer'), { babble: 'fish' }, 'updates if statePoints changes');
 
   service.get('statePoints').pushObject({ ocra: 'corn' });
 
-  assert.deepEqual(service.get('stateBuffer').toPojo(), { ocra: 'corn' }, 'updates if statePoint length changes');
-});
-
-test('stateBuffer can set max values', function(assert) {
-  assert.expect(2);
-
-  const engineId = 'foo';
-  const service = this.subject({ engineId, statePoints: Ember.A([{ bar: 1 }]) });
-  const stateBuffer = service.get('stateBuffer');
-
-  stateBuffer.max('bar', 5);
-  stateBuffer.set('bar', 10);
-
-  assert.equal(stateBuffer.get('bar'), 5, 'cannot be set above max');
-
-  stateBuffer.incrementProperty('bar', 5);
-
-  assert.equal(stateBuffer.get('bar'), 5, 'cannot be incremented above max');
+  assert.deepEqual(service.get('stateBuffer'), { ocra: 'corn' }, 'updates if statePoint length changes');
 });
 
 test('restartingEngine resets the statePoints', function(assert) {
@@ -88,7 +71,7 @@ test('shouldFileStateBuffer pushes the stateBuffer to the statePoints', function
   const engineId = 'foo';
   const service = this.subject({ engineId, statePoints: Ember.A([{ foo: 'bar' }]) });
 
-  service.get('stateBuffer').set('baz', 'bumble');
+  service.set('stateBuffer.baz', 'bumble');
 
   publisher.get('eBus').publish('shouldFileStateBuffer');
 

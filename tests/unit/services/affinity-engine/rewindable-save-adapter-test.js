@@ -54,10 +54,26 @@ test('data returns the stateBuffer', function(assert) {
   assert.expect(1);
 
   const engineId = 'foo';
-  const statePointManager = { stateBuffer: 'bar' };
+  const statePointManager = { stateBuffer: { bar: 'baz' } };
   const service = this.subject({ engineId, statePointManager });
 
-  assert.equal(service.get('data'), 'bar', 'is correct initially');
+  assert.equal(service.get('data.bar'), 'baz', 'is correct initially');
+});
+
+test('data has a getSharedData function that returns a sharedData buffer', function(assert) {
+  assert.expect(2);
+
+  const engineId = 'foo';
+  const statePointManager = { stateBuffer: { } };
+  const sharedDataManager = { data: { bar: 'baz' } };
+  const service = this.subject({ engineId, sharedDataManager, statePointManager });
+  const sharedData = service.get('data').getSharedData();
+
+  assert.equal(sharedData.get('bar'), 'baz', 'is correct initially');
+
+  assert.willPublish('shouldPersistSharedData', '`shouldPersistSharedData` was triggered');
+
+  sharedData.save();
 });
 
 test('mostRecentSave returns a promise of the most recent save', function(assert) {

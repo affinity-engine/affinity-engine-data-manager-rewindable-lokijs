@@ -3,10 +3,35 @@ import { module, test } from 'qunit';
 
 module('Unit | Model | affinity engine/rewindable save adapter/state buffer');
 
+test('stateBuffer proxies the content', function(assert) {
+  assert.expect(7);
+
+  const content = {};
+  const stateBuffer = StateBuffer.create({ content });
+
+  stateBuffer.toggleProperty('foo');
+  assert.ok(content.foo, 'toggleProperty is proxied');
+
+  stateBuffer.set('foo', 5);
+  assert.equal(content.foo, 5, 'set is proxied');
+
+  stateBuffer.setProperties({ bar: 'alpha', baz: 'beta' });
+  assert.deepEqual(content, { foo: 5, bar: 'alpha', baz: 'beta' }, 'setProperties is proxied');
+
+  assert.equal(stateBuffer.get('foo'), content.foo, 'get is proxied');
+  assert.deepEqual(stateBuffer.getProperties('foo', 'bar'), { foo: 5, bar: 'alpha' }, 'getProperties is proxied');
+
+  stateBuffer.incrementProperty('foo', 5);
+  assert.equal(content.foo, 10, 'incrementProperty is proxied');
+
+  stateBuffer.decrementProperty('foo', 5);
+  assert.equal(content.foo, 5, 'decrementProperty is proxied');
+});
+
 test('stateBuffer can set max values', function(assert) {
   assert.expect(6);
 
-  const stateBuffer = StateBuffer.create({ bar: 0, baz: { alpha: 0} });
+  const stateBuffer = StateBuffer.create({ content: { bar: 0, baz: { alpha: 0} } });
 
   stateBuffer.max('bar', 5);
   stateBuffer.max('baz.alpha', 7);
@@ -35,7 +60,7 @@ test('stateBuffer can set max values', function(assert) {
 test('stateBuffer can set min values', function(assert) {
   assert.expect(6);
 
-  const stateBuffer = StateBuffer.create({ bar: 0, baz: { alpha: 0} });
+  const stateBuffer = StateBuffer.create({ content: { bar: 0, baz: { alpha: 0} } });
 
   stateBuffer.min('bar', -5);
   stateBuffer.min('baz.alpha', -7);
