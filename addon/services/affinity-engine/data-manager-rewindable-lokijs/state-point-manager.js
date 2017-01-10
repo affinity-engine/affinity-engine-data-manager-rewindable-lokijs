@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import StateBuffer from 'affinity-engine-data-manager-rewindable-lokijs/models/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
+import StateBuffer from 'affinity-engine-data-manager-rewindable-lokijs/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
 import { configurable } from 'affinity-engine';
 import multiton from 'ember-multiton-service';
 
