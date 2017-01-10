@@ -18,11 +18,11 @@ const addToMap = function addToMap(map, key, value) {
 
 export default Ember.ObjectProxy.extend({
   decrementProperty(key, amount = 1) {
-    return this.set(key, get(this, key) - amount);
+    return this.set(key, (get(this, key) || 0) - amount);
   },
 
   incrementProperty(key, amount = 1) {
-    return this.set(key, get(this, key) + amount);
+    return this.set(key, (get(this, key) || 0) + amount);
   },
 
   set(key, value) {

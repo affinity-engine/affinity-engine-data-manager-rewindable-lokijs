@@ -21,11 +21,11 @@ test('stateBuffer proxies the content', function(assert) {
   assert.equal(stateBuffer.get('foo'), content.foo, 'get is proxied');
   assert.deepEqual(stateBuffer.getProperties('foo', 'bar'), { foo: 5, bar: 'alpha' }, 'getProperties is proxied');
 
-  stateBuffer.incrementProperty('foo', 5);
-  assert.equal(content.foo, 10, 'incrementProperty is proxied');
+  stateBuffer.incrementProperty('number', 5);
+  assert.equal(content.number, 5, 'incrementProperty is proxied');
 
-  stateBuffer.decrementProperty('foo', 5);
-  assert.equal(content.foo, 5, 'decrementProperty is proxied');
+  stateBuffer.decrementProperty('number2', 5);
+  assert.equal(content.number2, -5, 'decrementProperty is proxied');
 });
 
 test('stateBuffer can set max values', function(assert) {
