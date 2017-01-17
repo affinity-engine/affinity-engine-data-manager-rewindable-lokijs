@@ -3,4 +3,4 @@
 
 # affinity-engine-data-manager-rewindable-lokijs
 
-You'll find the interactive guides [here](http://www.affinityengine.org/plugins/data-manager-rewindable-lokijs).
+You'll find the interactive guides [here](http://www.affinityengine.org/#/plugins/data-manager-rewindable-lokijs).

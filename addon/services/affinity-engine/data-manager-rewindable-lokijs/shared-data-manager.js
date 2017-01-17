@@ -11,13 +11,15 @@ const {
 
 const { inject: { service } } = Ember;
 
-const { alias } = computed;
+const { alias, reads } = computed;
 
 export default Service.extend({
   store: service(),
+  dataGroupManager: multiton('affinity-engine/data-manager-rewindable-lokijs/data-group-manager', 'engineId'),
   eBus: multiton('message-bus', 'engineId'),
 
   data: alias('sharedData.dataMap'),
+  dataGroup: reads('dataGroupManager.dataGroup'),
 
   init(...args) {
     this._super(...args);
@@ -28,13 +30,13 @@ export default Service.extend({
   },
 
   _setSharedData() {
-    const { engineId, store } = getProperties(this, 'engineId', 'store');
+    const { dataGroup, store } = getProperties(this, 'dataGroup', 'store');
 
-    store.queryRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', { engineId }).
+    store.queryRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', { dataGroup }).
       then((sharedData) => set(this, 'sharedData', sharedData)).
       catch(() => {
         store.createRecord('affinity-engine/data-manager-rewindable-lokijs/shared-data', {
-          engineId,
+          dataGroup,
           dataMap: {}
         }).save().then((sharedData) => set(this, 'sharedData', sharedData));
       });

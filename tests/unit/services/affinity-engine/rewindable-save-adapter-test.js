@@ -29,18 +29,19 @@ moduleFor('service:affinity-engine/data-manager-rewindable-lokijs', 'Unit | Serv
   }
 });
 
-test('saves returns a promise of all saves namespaced to engineId', function(assert) {
+test('saves returns a promise of all saves namespaced to dataGroup', function(assert) {
   assert.expect(2);
 
   const engineId = 'foo';
-  const service = this.subject({ engineId });
+  const dataGroup = 'bar';
+  const service = this.subject({ engineId, dataGroup });
   const store = service.get('store');
 
   run(() => {
-    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId }).save().then(() => {
-      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId }).save();
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { dataGroup, engineId }).save().then(() => {
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { dataGroup, engineId }).save();
     }).then(() => {
-      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId: 'bar' }).save();
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { dataGroup: 'baz', engineId }).save();
     }).then(() => {
       return service.get('saves');
     }).then((saves) => {
@@ -80,14 +81,15 @@ test('mostRecentSave returns a promise of the most recent save', function(assert
   assert.expect(2);
 
   const engineId = 'foo';
-  const service = this.subject({ engineId });
+  const dataGroup = engineId;
+  const service = this.subject({ engineId, dataGroup });
   const store = service.get('store');
 
   run(() => {
-    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, name: 'foo' }).save().then(() => {
-      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, name: 'bar' }).save();
+    store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, dataGroup, name: 'foo' }).save().then(() => {
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, dataGroup, name: 'bar' }).save();
     }).then(() => {
-      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, name: 'baz' }).save();
+      return store.createRecord('affinity-engine/data-manager-rewindable-lokijs/save', { engineId, dataGroup, name: 'baz' }).save();
     }).then(() => {
       return service.get('mostRecentSave');
     }).then((mostRecentSave) => {

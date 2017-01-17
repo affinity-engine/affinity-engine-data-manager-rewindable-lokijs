@@ -23,10 +23,12 @@ export default Service.extend({
   store: service(),
 
   autosaveManager: multiton('affinity-engine/data-manager-rewindable-lokijs/autosave-manager', 'engineId'),
+  dataGroupManager: multiton('affinity-engine/data-manager-rewindable-lokijs/data-group-manager', 'engineId'),
   eBus: multiton('message-bus', 'engineId'),
   sharedDataManager: multiton('affinity-engine/data-manager-rewindable-lokijs/shared-data-manager', 'engineId'),
   statePointManager: multiton('affinity-engine/data-manager-rewindable-lokijs/state-point-manager', 'engineId'),
 
+  dataGroup: reads('dataGroupManager.dataGroup'),
   statePoints: reads('statePointManager.statePoints'),
   stateBuffer: alias('statePointManager.stateBuffer'),
   sharedData: alias('sharedDataManager.data'),
@@ -76,23 +78,25 @@ export default Service.extend({
     }
   }),
 
-  saves: computed('engineid', {
+  saves: computed('dataGroup', {
     get() {
-      const engineId = get(this, 'engineId');
+      const dataGroup = get(this, 'dataGroup');
 
       return get(this, 'store').query('affinity-engine/data-manager-rewindable-lokijs/save', {
-        engineId
+        dataGroup
       });
     }
   }).readOnly().volatile(),
 
   _createRecord(name, options = {}) {
     const engineId = get(this, 'engineId');
+    const dataGroup = get(this, 'dataGroup');
     const version = get(this, 'version');
     const statePoints = this._getCurrentStatePoints();
 
     get(this, 'store').createRecord('affinity-engine/data-manager-rewindable-lokijs/save', {
       engineId,
+      dataGroup,
       name,
       statePoints,
       version,
@@ -102,11 +106,13 @@ export default Service.extend({
 
   _updateRecord(record, options = {}) {
     const engineId = get(this, 'engineId');
+    const dataGroup = get(this, 'dataGroup');
     const version = get(this, 'version');
     const statePoints = this._getCurrentStatePoints();
 
     setProperties(record, {
       engineId,
+      dataGroup,
       statePoints,
       version,
       ...options

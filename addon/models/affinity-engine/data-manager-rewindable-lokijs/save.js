@@ -12,7 +12,7 @@ const {
 } = Ember;
 
 const configurationTiers = [
-  'config.attrs.plugins.dataManager',
+  'config.attrs.plugin.dataManager',
   'config.attrs.global'
 ];
 
@@ -20,6 +20,7 @@ export default Model.extend(LokiJSModelMixin, {
   isAutosave: attr('boolean'),
   name: attr('string'),
   statePoints: attr(),
+  dataGroup: attr('string'),
   engineId: attr('string'),
 
   config: multiton('affinity-engine/config', 'engineId'),

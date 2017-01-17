@@ -55,7 +55,7 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "demoURL": "http://www.affinityengine.org/plugins/data-manager-rewindable-lokijs",
+    "demoURL": "http://www.affinityengine.org/#/plugins/data-manager-rewindable-lokijs",
     "after": [
       "affinity-engine"
     ]
