@@ -1,6 +1,6 @@
 {
   "name": "affinity-engine-data-manager-rewindable-lokijs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "An Affinity Engine data manager using lokijs",
   "keywords": [
     "ember-addon",
@@ -27,7 +27,7 @@
     "ember-moment": "^6.1.0"
   },
   "devDependencies": {
-    "affinity-engine": "git+https://github.com/affinity-engine/affinity-engine.git",
+    "affinity-engine": "^0.1.0",
     "babel-eslint": "^6.0.4",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^2.4.1",
