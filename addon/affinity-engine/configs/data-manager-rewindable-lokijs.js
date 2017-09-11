@@ -2,8 +2,10 @@ export default {
   priority: 2,
   plugin: {
     dataManager: {
-      maxAutosaves: 3,
-      maxStatePoints: false
+      attrs: {
+        maxAutosaves: 3,
+        maxStatePoints: false
+      }
     }
   },
   registrant: {

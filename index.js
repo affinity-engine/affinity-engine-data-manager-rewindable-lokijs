@@ -1,6 +1,6 @@
-/* jshint node: true */
+/* eslint-env node */
 'use strict';
 
 module.exports = {
-  name: 'affinity-engine-data-manager-rewindable-lokijs'
+  name: 'affinity-engine-plugin-data-manager-rewindable-lokijs'
 };

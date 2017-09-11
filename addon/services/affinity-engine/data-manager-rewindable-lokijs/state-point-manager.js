@@ -12,8 +12,8 @@ const {
 } = Ember;
 
 const configurationTiers = [
-  'config.attrs.plugin.dataManager',
-  'config.attrs.global'
+  'plugin.dataManager',
+  'children'
 ];
 
 export default Service.extend({

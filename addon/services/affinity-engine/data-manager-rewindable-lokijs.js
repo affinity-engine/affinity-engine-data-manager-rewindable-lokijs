@@ -1,10 +1,11 @@
 import Ember from 'ember';
 import { nativeCopy } from 'affinity-engine';
-import StateBuffer from 'affinity-engine-data-manager-rewindable-lokijs/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
+import StateBuffer from 'affinity-engine-plugin-data-manager-rewindable-lokijs/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
 import multiton from 'ember-multiton-service';
 
 const {
   Service,
+  assign,
   computed,
   get,
   getProperties,
@@ -94,14 +95,13 @@ export default Service.extend({
     const version = get(this, 'version');
     const statePoints = this._getCurrentStatePoints();
 
-    get(this, 'store').createRecord('affinity-engine/data-manager-rewindable-lokijs/save', {
+    get(this, 'store').createRecord('affinity-engine/data-manager-rewindable-lokijs/save', assign({
       engineId,
       dataGroup,
       name,
       statePoints,
-      version,
-      ...options
-    }).save();
+      version
+    }, options)).save();
   },
 
   _updateRecord(record, options = {}) {
@@ -110,13 +110,12 @@ export default Service.extend({
     const version = get(this, 'version');
     const statePoints = this._getCurrentStatePoints();
 
-    setProperties(record, {
+    setProperties(record, assign({
       engineId,
       dataGroup,
       statePoints,
-      version,
-      ...options
-    });
+      version
+    }, options));
 
     record.save();
   },

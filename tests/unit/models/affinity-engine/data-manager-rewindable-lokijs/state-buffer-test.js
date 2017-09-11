@@ -1,4 +1,4 @@
-import StateBuffer from 'affinity-engine-data-manager-rewindable-lokijs/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
+import StateBuffer from 'affinity-engine-plugin-data-manager-rewindable-lokijs/affinity-engine/data-manager-rewindable-lokijs/state-buffer';
 import { module, test } from 'qunit';
 
 module('Unit | Model | affinity engine/rewindable save adapter/state buffer');

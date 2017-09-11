@@ -9,7 +9,7 @@ const {
   run
 } = Ember;
 
-const { next } = run;
+const { later, next } = run;
 
 const Publisher = Ember.Object.extend({ eBus: multiton('message-bus', 'engineId'), engineId: 'foo' });
 let publisher;
@@ -105,6 +105,8 @@ test('mostRecentSave returns a promise of the most recent save', function(assert
 test('shouldCreateSave creates a save', function(assert) {
   assert.expect(5);
 
+  const done = assert.async();
+
   const engineId = 'foo';
   const version = '1.0.0';
   const statePoints = [{}, {}, { foo: 1, bar: 1 }];
@@ -117,19 +119,23 @@ test('shouldCreateSave creates a save', function(assert) {
     publisher.get('eBus').publish('shouldCreateSave', name, options);
   });
 
-  next(() => {
+  later(() => {
     store.findRecord('affinity-engine/data-manager-rewindable-lokijs/save', 1).then((record) => {
       assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 1, bar: 1 }], 'statePoints are correct');
       assert.equal(record.get('engineId'), engineId, 'engineId is correct');
       assert.equal(record.get('name'), name, 'name is correct');
       assert.equal(record.get('version'), version, 'version is correct');
       assert.equal(record.get('autosave'), true, 'options applied correctly');
+
+      done();
     })
-  });
+  }, 1);
 });
 
 test('shouldUpdateSave updates a save', function(assert) {
   assert.expect(5);
+
+  const done = assert.async();
 
   const engineId = 'foo';
   const version = '1.0.0';
@@ -145,14 +151,16 @@ test('shouldUpdateSave updates a save', function(assert) {
     });
   });
 
-  next(() => {
+  later(() => {
     store.findRecord('affinity-engine/data-manager-rewindable-lokijs/save', 1).then((record) => {
       assert.deepEqual(record.get('statePoints'), [{}, {}, { foo: 1, bar: 1 }], 'statePoints are correct');
       assert.equal(record.get('engineId'), engineId, 'engineId is correct');
       assert.equal(record.get('name'), name, 'name is correct');
       assert.equal(record.get('version'), version, 'version is correct');
       assert.equal(record.get('autosave'), true, 'options applied correctly');
-    })
+
+      done();
+    }, 1);
   });
 });
 

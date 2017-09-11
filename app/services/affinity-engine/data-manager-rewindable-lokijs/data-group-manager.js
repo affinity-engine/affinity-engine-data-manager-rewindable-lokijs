@@ -1,1 +1,1 @@
-export { default } from 'affinity-engine-data-manager-rewindable-lokijs/services/affinity-engine/data-manager-rewindable-lokijs/data-group-manager';
+export { default } from 'affinity-engine-plugin-data-manager-rewindable-lokijs/services/affinity-engine/data-manager-rewindable-lokijs/data-group-manager';
