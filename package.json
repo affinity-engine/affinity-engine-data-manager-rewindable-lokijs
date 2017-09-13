@@ -1,6 +1,6 @@
 {
   "name": "affinity-engine-plugin-data-manager-rewindable-lokijs",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "An Affinity Engine data manager using lokijs",
   "keywords": [
     "ember-addon",

@@ -26,7 +26,7 @@ test('dataGroup returns the engineId if no config is defined', function(assert) 
 
 const configurationTiers = [
   'config.attrs.plugin.dataManager.attrs',
-  'config.attrs.every.attrs'
+  'config.attrs.all.attrs'
 ];
 
 configurationTiers.forEach((tier) => {

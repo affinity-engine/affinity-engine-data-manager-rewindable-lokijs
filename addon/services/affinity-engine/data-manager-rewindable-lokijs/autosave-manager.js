@@ -14,7 +14,7 @@ const { inject: { service } } = Ember;
 
 const configurationTiers = [
   'plugin.dataManager',
-  'children'
+  'all'
 ];
 
 export default Service.extend({

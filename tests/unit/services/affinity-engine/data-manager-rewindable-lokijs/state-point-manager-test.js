@@ -91,7 +91,7 @@ test('shouldFileStateBuffer shifts old state points if they exceed maxStatePoint
 
 const configurationTiers = [
   'config.attrs.plugin.dataManager',
-  'config.attrs.every'
+  'config.attrs.all'
 ];
 
 configurationTiers.forEach((tier) => {
